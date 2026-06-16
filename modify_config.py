@@ -74,43 +74,33 @@ final_json_text = final_json_text.replace('./py/', 'https://cnb.cool/fish2018/xs
 final_json_text = final_json_text.replace('"warningText": "欢迎使用鱼儿自用缝合专线，完全免费！"', '"warningText": "欢迎使用老杨自用全量缝合专线，本接口完全免费！"')
 
 # ====================================================================
-# 5. 🌟 智能语义洗牌：个性重组 + 老杨TV 适时注入 🌟
+# 5. 🌟 智能字数判定引流模块：剥离老杨字眼 + 5字以内精准挂载 🌟
 # ====================================================================
 
-def smart_rename_personality(match):
+def clean_and_append_tg(match):
     full_line = match.group(0)
     original_name = match.group(1)
     
-    # 1. 彻底清除破坏美感的垃圾品牌词和符号
+    # 1. 拔除全部海豚相关词汇和特殊符号
     clean = original_name.replace('🐬', '').replace('海豚影视', '').replace('海豚', '')
     clean = clean.replace('｜', '').replace('丨', '').replace('|', '').strip()
     
-    # 2. 根据原名的含义与关键词，进行个性化定制重组
-    if "综合" in clean or "全能" in clean:
-        new_name = f"老杨TV专属｜{clean}"
-    elif "4K" in clean or "特质" in clean or "高清" in clean or "蓝光" in clean:
-        new_name = f"老杨TV·{clean}"
-    elif "磁力" in clean or "网盘" in clean or "搜索" in clean:
-        new_name = f"老杨影视·{clean}"
-    elif "港台" in clean or "国际" in clean or "海外" in clean:
-        new_name = f"境外特线｜{clean}专线"
-    elif "体育" in clean or "直播" in clean or "看球" in clean:
-        new_name = f"老杨体育｜{clean}"
-    elif "合集" in clean or "免费" in clean:
-        # 类似“各大源合集 永久免费如有收费的都是骗子”的处理
-        new_name = f"老杨TV全网通知｜{clean}"
-    elif not clean or clean == "APP":
-        new_name = "老杨核心｜全能影视"
+    # 2. 如果被剥离后成了空名字或默认APP，给个通用干净名字兜底
+    if not clean or clean == "APP":
+        clean = "全能影视"
+        
+    # 3. 🎯 核心逻辑：判断清洗后的原名长度是否不超过 5 个字
+    if len(clean) <= 5:
+        new_name = f"{clean} [Tg频道：@huliys9]"
     else:
-        # 其余小众个性名字（如某些特定的App接口名），保留原名并加专线后缀
-        new_name = f"{clean}｜老杨专线"
+        new_name = clean  # 超过 5 个字就老老实实保留原有个性名，不加后缀
         
     return full_line.replace(f'"name": "{original_name}"', f'"name": "{new_name}"')
 
-# 靶向重命名带海豚标记的行
-final_json_text = re.sub(r'.*"name": "([^"]*(?:🐬|海豚)[^"]*)".*', smart_rename_personality, final_json_text)
+# 精准拦截带有海豚标志的数据行
+final_json_text = re.sub(r'.*"name": "([^"]*(?:🐬|海豚)[^"]*)".*', clean_and_append_tg, final_json_text)
 
-# 3. 靶向替换特定的广告词、联系方式以及你的新频道链接
+# 全局基础广告和群组链接强洗
 final_json_text = final_json_text.replace('@hshsjk9', '@huliys9')
 final_json_text = final_json_text.replace('交流群', 'Tg频道')
 
@@ -126,4 +116,4 @@ final_json_text = final_json_text.replace(',\n  ]', '\n  ]')
 with open(output_path, 'w', encoding='utf-8') as f:
     f.write(final_json_text)
 
-print("🎉 【老杨TV个性融合版】已闪电生成完毕！")
+print("🎉 【5字内精准引流版】已经无缝生成，未包含任何老杨字眼！")
