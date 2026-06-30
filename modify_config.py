@@ -54,7 +54,6 @@ print(f"🎯 最终结算 -> 目标输出：{output_filename}")
 # ====================================================================
 # 🛡️ 【金蝉脱壳：绿色版过期旧线一键调包为纯文字滚动大轰炸】
 # ====================================================================
-# 同时也扫描旧的“老杨TV”及新的“蝴蝶影视”系列旧文件进行调包
 old_configs = glob.glob('datas/蝴蝶影视纯净版*.json') + glob.glob('datas/老杨TV纯净版*.json') + glob.glob('datas/老杨TV无18*.json')
 for old_file in old_configs:
     if os.path.basename(old_file) != output_filename:
@@ -157,7 +156,7 @@ for src, dst in path_replacements.items():
 
 # 绿色版开机公告注入
 thanks_warning = "👑 特别致谢与版权声明\n本接口的诞生离不开大后方几位业内顶流技术大佬的无私奉献，特此致谢：\n🐋 感谢鱼佬的付出\n源码基础与发布主页: fish2018/webhtv\n版本发布绝对地址: fish2018/webhtv/releases\nTelegram 官方群组: 👉 https://t.me/webhtv\n 感谢佬的付出\n核心仓库主页: FGBLH/GHK\n数据源直链地址: FGBLH/GHK/.json\nTelegram 官方群组: 👉 https://t.me/hshsjk9"
-welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚大佬＆鱼佬的优质资源缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效或断流，请及时回 Telegram 频道（@huliys9）或微信群获取当前最新密码！"
+welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚大佬＆鱼佬的优质 resource 缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效或断流，请及时回 Telegram 频道（@huliys9）或微信群获取当前最新密码！"
 
 try:
     final_obj = json.loads(final_json_text)
@@ -191,23 +190,27 @@ try:
         if live.get("name") == "乡村电视安全防屏蔽占位符":
             live["name"] = "乡村电视 ｜Tg：@huliys9"
 
-    # 🦋 加蝴蝶逻辑
-    for site in ordered_obj.get("sites", []):
-        if "name" in site:
-            name_val = site["name"]
-            for char in ['丨', '┃', ' ']:
-                name_val = name_val.strip(char)
-            name_val = re.sub(r'\s+', ' ', name_val)
-            if not name_val.startswith("🦋"):
-                site["name"] = f"🦋 {name_val}"
+    # 🦋 加蝴蝶逻辑（加一层安全隔离，防止报错阻断写出）
+    try:
+        for site in ordered_obj.get("sites", []):
+            if "name" in site:
+                name_val = site["name"]
+                for char in ['丨', '┃', ' ']:
+                    name_val = name_val.strip(char)
+                name_val = re.sub(r'\s+', ' ', name_val)
+                if not name_val.startswith("🦋"):
+                    site["name"] = f"🦋 {name_val}"
 
-    for site in ordered_obj.get("sites", []):
-        if "key" in site and site["key"] == "AQY":
-            site["name"] = "🦋 爱奇艺｜此接口非原创，合并自海豚佬和鱼佬接口，感谢两位大佬的付出，如有侵权，联系删除｜@huliys9"
+        for site in ordered_obj.get("sites", []):
+            if "key" in site and site["key"] == "AQY":
+                site["name"] = "🦋 爱奇艺｜此接口非原创，合并自海豚佬和鱼佬接口，感谢两位大佬的付出，如有侵权，联系删除｜@huliys9"
+    except Exception as inner_e:
+        print(f"⚠️ 提示：美化蝴蝶图标或爱奇艺改名时跳过，原因: {inner_e}")
 
     # 写出最终文件文本并做最后微调
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
+    # 🌟【核心修复】强制将写入文件操作提到最外面，确保 100% 成功生成并被 Git 捕捉
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(output_json_text)
         
@@ -218,3 +221,8 @@ try:
 
 except Exception as e:
     print(f"❌ 严重错误：最后的本地过滤渲染失败，reason: {e}")
+
+# 🌟【双重保险】无论上面逻辑怎么报错，控制开关文件在初始化时只要生成了，都确保写在物理磁盘上
+if not os.path.exists(lock_file_path):
+    with open(lock_file_path, 'w', encoding='utf-8') as f:
+        f.write(current_token)
