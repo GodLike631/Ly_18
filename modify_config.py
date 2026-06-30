@@ -14,35 +14,51 @@ lock_file_path = 'datas/控制开关.txt'
 tracker_path = 'datas/最新接口文件名.txt'
 
 # ====================================================================
-# ⏰ 【每月 1 号自动大洗牌与控制开关清空自动生成逻辑】
+# ⏰ 【每月 1 号自动大洗牌与控制开关自动生成逻辑】
 # ====================================================================
 today = datetime.datetime.now()
+current_month = str(today.month) 
 is_reset_day = (today.day == 1)
 
-current_token = "全量版"
+saved_month = ""
+saved_code = ""
 
-# 1. 尝试读取现有的开关状态
+# 1. 尝试读取现有的开关状态 (格式为 "月份-3位密码"，例如 "7-k9x")
 if os.path.exists(lock_file_path):
     with open(lock_file_path, 'r', encoding='utf-8') as f:
-        current_token = f.read().strip()
+        content = f.read().strip()
+        if "-" in content:
+            saved_month, saved_code = content.split("-", 1)
+        else:
+            # 如果里面是老脚本留下的纯文本或旧固定密码
+            saved_code = content
 
-# 🎯 如果控制开关被手动清空了（或全是空格）
-if not current_token:
+# 🎯 判定：如果是 1 号，且记录的月份不是当前月份（说明是当月第一次跑，跨月了）
+if is_reset_day and saved_month != current_month:
+    # 随机生成 3 位新密码
     current_token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=3))
+    # 写入当前月份和新密码，例如 "7-k9x"
     with open(lock_file_path, 'w', encoding='utf-8') as f:
-        f.write(current_token)
-    print(f"🎲 【探测到开关为空】已自动随机生成 3 位新密码并写入开关: {current_token}")
+        f.write(f"{current_month}-{current_token}")
+    print(f"⏰ 【每月1号全新硬核洗牌】检测到进入新月份 {current_month} 月！已全自动抽签生成本月新密锁: {current_token}")
 
-# 2. 如果是 1 号，且目前开关里还不是 3 位随机暗号（说明是当月第一次跑，或者是全量版/纯净版字样）
-if is_reset_day and (current_token in ["全量版", "纯净版"] or len(current_token) != 3):
-    current_token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=3))
-    with open(lock_file_path, 'w', encoding='utf-8') as f:
-        f.write(current_token)
-    print(f"⏰ 【每月1号绿色版全自动洗牌】已触发！自动抽签生成本月新密锁并写入开关: {current_token}")
-elif is_reset_day:
-    print(f"🔒 【安全阀拦截】今日 1 号已在早晨完成绿色版大洗牌，晚上保持原暗号不再重复抽签: {current_token}")
+# 🎯 判定：如果是 1 号的第二次及后续运行
+elif is_reset_day and saved_month == current_month:
+    current_token = saved_code
+    print(f"🔒 【安全阀拦截】今日 1 号已经是当月第二次运行，保持原暗号: {current_token}")
 
-# 3. 🎯 严格判定最终输出的文件名（固定带上“蝴蝶影视纯净版”）
+# 🎯 平常日子
+else:
+    # 如果平时发现开关空了，或者里面还是旧的不带月份的密码，立刻初始化
+    if not saved_code or len(saved_code) != 3 or "-" not in (content if os.path.exists(lock_file_path) else ""):
+        current_token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=3))
+        with open(lock_file_path, 'w', encoding='utf-8') as f:
+            f.write(f"{current_month}-{current_token}")
+    else:
+        current_token = saved_code
+    print(f"📡 正常沿用本月密锁: {current_token}")
+
+# 3. 严格判定最终输出的文件名
 if current_token in ["全量版", "纯净版"]:
     output_filename = "蝴蝶影视纯净版.json"
 else:
@@ -190,7 +206,7 @@ try:
         if live.get("name") == "乡村电视安全防屏蔽占位符":
             live["name"] = "乡村电视 ｜Tg：@huliys9"
 
-    # 🦋 加蝴蝶逻辑（加一层安全隔离，防止报错阻断写出）
+    # 🦋 加蝴蝶逻辑
     try:
         for site in ordered_obj.get("sites", []):
             if "name" in site:
@@ -205,12 +221,12 @@ try:
             if "key" in site and site["key"] == "AQY":
                 site["name"] = "🦋 爱奇艺｜此接口非原创，合并自海豚佬和鱼佬接口，感谢两位大佬的付出，如有侵权，联系删除｜@huliys9"
     except Exception as inner_e:
-        print(f"⚠️ 提示：美化蝴蝶图标或爱奇艺改名时跳过，原因: {inner_e}")
+        print(f"⚠️ 提示：美化蝴蝶图标时跳过，原因: {inner_e}")
 
     # 写出最终文件文本并做最后微调
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
-    # 🌟【核心修复】强制将写入文件操作提到最外面，确保 100% 成功生成并被 Git 捕捉
+    # 🌟 强行写出文件
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(output_json_text)
         
@@ -222,7 +238,7 @@ try:
 except Exception as e:
     print(f"❌ 严重错误：最后的本地过滤渲染失败，reason: {e}")
 
-# 🌟【双重保险】无论上面逻辑怎么报错，控制开关文件在初始化时只要生成了，都确保写在物理磁盘上
-if not os.path.exists(lock_file_path):
+# 🌟 双重保险：无论如何，最终确保开关文件是以标准月份格式持久保存在本地磁盘上
+if not os.path.exists(lock_file_path) or "-" not in (open(lock_file_path, 'r', encoding='utf-8').read() if os.path.exists(lock_file_path) else ""):
     with open(lock_file_path, 'w', encoding='utf-8') as f:
-        f.write(current_token)
+        f.write(f"{current_month}-{current_token}")
