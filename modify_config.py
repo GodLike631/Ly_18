@@ -60,14 +60,14 @@ for old_file in old_configs:
         try:
             trap_json = {
                 "spider": "", 
-                "notice": "⚠️ 警告：当前“蝴蝶影视”绿色专线密码已过期断流！老链接已彻底作废！\n\n最新密码或纯净版链接加QQ群“532637640”获取",
-                "warningText": "👑 特别提示：加QQ群“532637640”获取",
+                "notice": "⚠️ 警告：当前“蝴蝶影视”绿色专线密码已过期断流！老链接已彻底作废！\n\n最新密码前往Tg频道（@huliys9）获取！",
+                "warningText": "👑 特别提示：前往Tg频道（@huliys9）获取最新密码！",
                 "sites": [
-                    {"key": "蝴蝶影视绿色纯文字提示", "name": "➡️ 请前往QQ群“532637640”获取最新密码🚨 ➡️ 请前往QQ群“532637640”获取最新密码", "type": 3, "api": "csp_JuDou", "searchable": 0, "quickSearch": 0, "filterable": 0},
-                    {"key": "蝴蝶影视绿色纯文字提示2", "name": "🚨 不要看这里了 ➡️ 请前往QQ群“532637640”获取最新密码", "type": 3, "api": "csp_JuDou", "searchable": 0, "quickSearch": 0, "filterable": 0}
+                    {"key": "蝴蝶影视绿色纯文字提示", "name": "➡️ 请前往Tg频道（@huliys9）获取最新密码🚨 ➡️ 请前往Tg频道（@huliys9）获取最新密码", "type": 3, "api": "csp_JuDou", "searchable": 0, "quickSearch": 0, "filterable": 0},
+                    {"key": "蝴蝶影视绿色纯文字提示2", "name": "🚨 不要看这里了 ➡️ 请前往Tg频道（@huliys9）获取最新密码", "type": 3, "api": "csp_JuDou", "searchable": 0, "quickSearch": 0, "filterable": 0}
                 ],
                 "lives": [
-                    {"group": "🚨 接口过期断流 ｜ 提示", "channels": [{"name": "👉 当前线路已过期 ➡️  请前往QQ群“532637640”获取最新密码", "urls": ["http://127.0.0.1"]}]}
+                    {"group": "🚨 接口过期断流 ｜ 提示", "channels": [{"name": "👉 当前线路已过期 ➡️  请前往Tg频道（@huliys9）获取最新密码", "urls": ["http://127.0.0.1"]}]}
                 ]
             }
             with open(old_file, 'w', encoding='utf-8') as f:
@@ -156,7 +156,7 @@ for src, dst in path_replacements.items():
 
 # 绿色版开机公告注入
 thanks_warning = "👑 特别致谢与版权声明\n本接口的诞生离不开大后方几位业内顶流技术大佬的无私奉献，特此致谢：\n🐋 感谢鱼佬的付出\n源码基础与发布主页: fish2018/webhtv\n版本发布绝对地址: fish2018/webhtv/releases\nTelegram 官方群组: 👉 https://t.me/webhtv\n 感谢佬的付出\n核心仓库主页: FGBLH/GHK\n数据源直链地址: FGBLH/GHK/.json\nTelegram 官方群组: 👉 https://t.me/hshsjk9"
-welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚大佬＆鱼佬的优质 resource 缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效或断流，请及时回 Telegram 频道（@huliys9）或微信群获取当前最新密码！"
+welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚大佬＆鱼佬的优质 resource 缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效或断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码！"
 
 try:
     final_obj = json.loads(final_json_text)
