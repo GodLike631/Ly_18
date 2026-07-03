@@ -2,7 +2,7 @@ name: 自动双源无损强行合并-备用线
 
 on:
   schedule:
-    # 🎯 避开整点阻塞，换算北京时间为早上 8:00 和晚上 20:00 准时合流清洗
+    # 🎯 避开整点阻塞，UTC 时间 0:00 和 12:00，换算北京时间刚好是早上 08:00 和晚上 20:00 准时合流清洗
     - cron: '0 0,12 * * *'
   workflow_dispatch: 
 
@@ -34,20 +34,19 @@ jobs:
       run: |
         python modify_config.py
 
-    # 3. 核心修正：精准同步控制开关，彻底杜绝 1号洗牌死循环
+    # 3. 核心修正：全量文件比对与暂存机制，彻底杜绝提交空报错与死循环
     - name: Commit and Push changes
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         
-        # 🌟 优化：使用 -f 强制 add，或使用通配符，防止文件因第一次生成不存在而报错
-        git add datas/控制开关.txt || true
-        git add datas/最新接口文件名.txt || true
-        git add datas/蝴蝶影视纯净版*.json || true
+        # 🌟 优化 1：直接暂存 datas 目录下的所有变动，防止遗漏任何生成的 json 或 txt 文件导致报错
+        git add datas/
         
-        if git diff-index --quiet HEAD; then
-          echo "文件没有变化，无需更新。"
-        else
+        # 🌟 优化 2：改用更安全的缓存区比对命令。只有在文件真正被 git add 暂存且有变化时才执行提交
+        if ! git diff --cached --exit-code --quiet; then
           git commit -m "双源自适应硬核净化合并 (蝴蝶影视纯净版系列): $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
+          git push origin main
+        else
+          echo "所有生成文件均无任何内容变化，跳过本次提交。"
         fi
