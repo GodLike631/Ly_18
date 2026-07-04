@@ -35,10 +35,10 @@ MY_CUSTOM_SITES = [
 # ====================================================================
 MY_CUSTOM_LIVES = [
     {
-        "name": "地方直播2｜Tg：@huliys9",
+        "name": "最新电影｜Tg：@huliys9",
         "type": 0,
         "ua": "okhttp/5.3.2",
-        "url": "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u"
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/GodLike631/Ly_18/refs/heads/main/datas/%E6%9C%80%E6%96%B0%E7%94%B5%E5%BD%B1.m3u"
     }
     # 以后想加第二条，大括号后面加个逗号，继续往下贴就行
 ]
