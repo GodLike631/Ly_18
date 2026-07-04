@@ -14,8 +14,8 @@ lock_file_path = 'datas/控制开关.txt'
 tracker_path = 'datas/最新接口文件名.txt'
 
 # ====================================================================
-# ✍️ 【通道一：老杨专属点播手工加线区】
-# 提示：单独加点播爬虫线贴在这里，自动享受后面的方阵分类美化和洗牌规则[cite: 8]。
+# ✍️ 【通道一：老杨专属点播手工加线区】[cite: 8]
+# 提示：单独加点播爬虫线贴在这里[cite: 8]。
 # ====================================================================
 MY_CUSTOM_SITES = [
     {
@@ -29,21 +29,18 @@ MY_CUSTOM_SITES = [
 ]
 
 # ====================================================================
-# 📺 【通道二：老杨专属直播手工加线区（精准锁定排第 6 位）】
-# 提示：以后你想给粉丝加任何单独的特色台、高清源或轮播组，直接贴在这里！
-# 贴在这里的直播分组，在脚本最终大合流时会强制插入到电视直播的第 6 个位置。
+# 📺 【通道二：老杨专属直播手工加线区（精准插入第 6 位）】
+# 提示：以后你想添加任何单独的 M3U 直连线路，直接用你最习惯的字典格式贴在这里！
+# 贴在这里的线路，在打包落盘时，会被脚本雷打不动地强行插到最终 lives 列表的第 6 位！
 # ====================================================================
 MY_CUSTOM_LIVES = [
-    # 示例格式（可以根据需要修改名称和链接）：
     {
-        "group": "👑 老杨特色 ｜ 专属定制组",
-        "channels": [
-            {
-                "name": "👉 最新电影",
-                "urls": ["https://ghfast.top/https://raw.githubusercontent.com/GodLike631/Ly_18/refs/heads/main/datas/%E6%9C%80%E6%96%B0%E7%94%B5%E5%BD%B1.m3u"]
-            }
-        ]
+        "name": "地方直播2｜Tg：@huliys9",
+        "type": 0,
+        "ua": "okhttp/5.3.2",
+        "url": "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u"
     }
+    # 以后想加第二条，大括号后面加个逗号，继续往下贴就行
 ]
 
 # ====================================================================
@@ -162,14 +159,17 @@ cnb_lives = json_cnb.get("lives", [])
 # 備份去重時需要的原有解析列表[cite: 8]
 combined_parses = json_haitun.get("parses", []) + json_cnb.get("parses", [])
 
-# ➕ 【核心合流：点播合并逻辑】
+# ➕ 【核心合流：点播合并逻辑】[cite: 8]
 json_cnb["sites"] = haitun_sites + cnb_sites + MY_CUSTOM_SITES
 
-# ➕ 【核心置中：直播精准第 6 位合并逻辑】
+# ➕ 【核心置中：直播精准插入至第 6 位逻辑】
+# 先把上游所有的原始直播大列表合并出来[cite: 8]
 base_lives = haitun_lives + cnb_lives
+
+# 使用 reversed 反向遍历你的手工直播列表，确保你写的顺序能原样精准插入第 6 位（Index 5）
 for custom_live in reversed(MY_CUSTOM_LIVES):
     if len(base_lives) >= 5:
-        base_lives.insert(5, custom_live)  # 👈 无论上游加多少组，强行把你的自定义直播塞到 Index 5（第 6 位）
+        base_lives.insert(5, custom_live)  # 👈 强制让你的单条大字典格式完完全全插入到 Index 5（也就是第 6 位）
     else:
         base_lives.append(custom_live)
 json_cnb["lives"] = base_lives
@@ -221,8 +221,9 @@ try:
         live_str = json.dumps(live, ensure_ascii=False)
         if "🔞" not in live_str and "18+" not in live_str and "有三级片" not in live_str:
             if live and isinstance(live, dict):
+                # 如果是你手工贴的这行没有给稳健UA头部，底层整容循环会自动帮它武装补齐！
                 if not live.get("ua") or live.get("ua") == "okhttp":
-                    live["ua"] = "okhttp/5.3.2"  # 👈 强制给你的自定义直播组也武装上最稳 UA 头部
+                    live["ua"] = "okhttp/5.3.2"
                 clean_lives.append(live)
             
     ordered_obj["sites"] = clean_sites
@@ -234,7 +235,7 @@ try:
             live["name"] = "乡村电视 ｜Tg：@huliys9"
 
     # ====================================================================
-    # 🌟file 【全新黑科技注入區：大屏體驗極致優化】[cite: 8]
+    # 🌟 【全新黑科技注入區：大屏體驗極致優化】[cite: 8]
     # ====================================================================
     try:
         # --- 1. 解析器去重與優化加载[cite: 8] ---
@@ -296,7 +297,7 @@ try:
         }
         ordered_obj["rules"] = [js_injection_rule] + [r for r in current_rules if r.get("name") != "老楊TV·雲端高級去廣告JS注入"]
 
-        # --- 5 & 6. 🏆【终极完全体：热播精准置顶、单线打标清洗、网盘组件强效洗白与九大方阵智能分类】[cite: 8] ---
+        # --- 5 & 6. 🏆 【终极完全体：热播精准置顶、单线打标清洗、网盘组件强效洗白与九大方阵智能分类】[cite: 8] ---
         block_1_rebo = []         # 1. 🏆 热播影视专属置顶方阵 (仅限 key: 热播影视)
         block_2_yingshi = []      # 2. 影视/追剧/APP大类
         block_3_duanju = []       # 3. 短剧/剧场
@@ -317,7 +318,6 @@ try:
             s_genre = site.get("genre", "")
             s_api = site.get("api", "")
             
-            # 清洗基础名称[cite: 8]
             for char in ['丨', '┃', ' ']:
                 raw_name = raw_name.strip(char)
             raw_name = re.sub(r'\s+', ' ', raw_name)
@@ -332,16 +332,12 @@ try:
             if "ext" in site and site["ext"] == {}:
                 site["ext"] = ""
 
-            # 🛠️ 核心一键净化：网盘组件强行去后缀格式化，完美激活未配 Token 自动隐形机制[cite: 8]
             if isinstance(s_api, str) and "PanWebShare" in s_api:
                 site["api"] = "csp_PanWebShare"
                 if "jar" in site:
                     site.pop("jar")
 
-            # 🛠️ 瓜子靶向保护：防误伤，强力摘出[cite: 8]
             is_guazi = "瓜子" in raw_name or "GZ" == s_key
-
-            # 🛠️ 精准硬核锁定：唯独将主线 "key": "热播影视" 抓取至 0 号位并追加长鸣谢[cite: 8]
             is_target_rebo_main = (s_key == "热播影视")
 
             if is_target_rebo_main:
@@ -379,8 +375,6 @@ try:
                 if not raw_name.startswith("🦋"): raw_name = f"🦋 {raw_name}"
                 site["name"] = raw_name
                 site["category"] = "网盘/磁力"
-                
-                # 网盘磁力降权关闭被动检索，全面免疫历史记录数据库死锁[cite: 8]
                 site["searchable"] = 0
                 site["quickSearch"] = 0
                 site["changeable"] = 1
@@ -418,12 +412,10 @@ try:
             if site.get("category") not in ["少儿", "音乐"] and "searchable" not in site:
                 site["searchable"] = 1
 
-        # 🛠️ 爱奇艺官方名称规格对齐[cite: 8]
         for site in block_2_yingshi:
             if site.get("key") == "AQY":
                 site["name"] = "🦋 爱奇艺 ｜Tg：@huliys9"
 
-        # 👑 【新首页硬组装】"key": "热播影视" 携长致谢完美置顶（Index 0），另一个热播"key": "rb"随大部队在综合影视区排列[cite: 8]
         ordered_obj["sites"] = (
             block_1_rebo +         
             block_2_yingshi +      
@@ -435,13 +427,13 @@ try:
             block_5_cili +         
             block_9_fuli           
         )
-        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法圆满完成！热播影视成功抢占开机推荐，网盘全员洗白沉底[cite: 8] 。")
+        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法圆满完成！[cite: 8]")
 
     except Exception as inner_e:
         print(f"⚠️ 提示：大屏高级美化优化处理时跳过，原因: {inner_e}")
 
     # ====================================================================
-    # 🌟【写出最终文件与落盘】[cite: 8]
+    # 🌟 【写出最终文件与落盘】[cite: 8]
     # ====================================================================
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
