@@ -39,8 +39,8 @@ MY_CUSTOM_LIVES = [
         "group": "👑 老杨特色 ｜ 专属定制组",
         "channels": [
             {
-                "name": "👉 测试高清频道1",
-                "urls": ["https://127.0.0.1/live.m3u8"]
+                "name": "👉 最新电影",
+                "urls": ["https://ghfast.top/https://raw.githubusercontent.com/GodLike631/Ly_18/refs/heads/main/datas/%E6%9C%80%E6%96%B0%E7%94%B5%E5%BD%B1.m3u"]
             }
         ]
     }
