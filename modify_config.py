@@ -14,8 +14,8 @@ lock_file_path = 'datas/控制开关.txt'
 tracker_path = 'datas/最新接口文件名.txt'
 
 # ====================================================================
-# ✍️ 【通道一：老杨专属点播手工加线区】[cite: 8]
-# 提示：单独加点播爬虫线贴在这里[cite: 8]。
+# ✍️ 【通道一：老杨专属点播手工加线区】
+# 提示：单独加点播爬虫线贴在这里，如果上游有同 key 线路，脚本会自动蒸发上游、以此处为准。
 # ====================================================================
 MY_CUSTOM_SITES = [
     {
@@ -37,22 +37,28 @@ MY_CUSTOM_SITES = [
 ]
 
 # ====================================================================
-# 📺 【通道二：老杨专属直播手工加线区（精准插入第 6 位）】
-# 提示：以后你想添加任何单独的 M3U 直连线路，直接用你最习惯的字典格式贴在这里！
-# 贴在这里的线路，在打包落盘时，会被脚本雷打不动地强行插到最终 lives 列表的第 6 位！
+# 📺 【通道二：老杨专属直播手工加线区（从第 6 位开始正向依序后排）】
+# 提示：乡村电视已完美收录在此！第一个手工源(乡村电视)占第 6 位，第二个(最新电影)自动顺延排第 7 位！
+# 如果手工加的直播线路名字与上游重复，脚本同样会自动触发“特权锁”全自动蒸发上游同名源！
 # ====================================================================
 MY_CUSTOM_LIVES = [
+    {
+        "name": "乡村电视 ｜Tg：@huliys9",
+        "type": 0,
+        "playerType": 2,
+        "ua": "okhttp/5.3.2",
+        "url": "https://gh-proxy.com/https://raw.githubusercontent.com/GodLike631/test/refs/heads/main/datas/%E4%B9%A1%E6%9D%91%E7%94%B5%E8%A7%86.txt"
+    },
     {
         "name": "最新电影｜Tg：@huliys9",
         "type": 0,
         "ua": "okhttp/5.3.2",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/GodLike631/Ly_18/refs/heads/main/datas/%E6%9C%80%E6%96%B0%E7%94%B5%E5%BD%B1.m3u"
     }
-    # 以后想加第二条，大括号后面加个逗号，继续往下贴就行
 ]
 
 # ====================================================================
-# ⏰ 【每月 1 号自动大洗牌与控制开关自动生成逻辑 - 引入月份判定版】 (原逻辑保留)[cite: 8]
+# ⏰ 【每月 1 号自动大洗牌与控制开关自动生成逻辑 - 引入月份判定版】 (原逻辑保留)
 # ====================================================================
 today = datetime.datetime.now()
 current_month = str(today.month) 
@@ -95,7 +101,7 @@ output_path = f"datas/{output_filename}"
 print(f"🎯 最终结算 -> 目标输出：{output_filename}")
 
 # ====================================================================
-# 🛡️ 【金蝉脱壳：绿色版过期旧线一键调包为纯文字滚动大轰炸】 (原逻辑保留)[cite: 8]
+# 🛡️ 【金蝉脱壳：绿色版过期旧线一键调包为纯文字滚动大轰炸】 (原逻辑保留)
 # ====================================================================
 old_configs = glob.glob('datas/蝴蝶影视纯净版*.json') + glob.glob('datas/老杨TV纯净版*.json') + glob.glob('datas/老杨TV无18*.json')
 for old_file in old_configs:
@@ -124,7 +130,7 @@ for garbage in ['datas/local_config.json', *glob.glob('datas/config_*.json')]:
 
 
 # ====================================================================
-# 🧠 【核心逻辑：正统 JSON 对象读取与合并逻辑】[cite: 8]
+# 🧠 【核心逻辑：正统 JSON 对象读取与合并逻辑】
 # ====================================================================
 def load_json_safe(path):
     if not os.path.exists(path):
@@ -149,38 +155,30 @@ for item in haitun_lives:
     if "name" in item:
         item["name"] = f"{item['name']}｜Tg：@huliys9"
 
-country_live_dict = {
-    "name": "乡村电视安全防屏蔽占位符",
-    "type": 0,
-    "playerType": 2,
-    "ua": "okhttp/5.3.2",
-    "url": "https://gh-proxy.com/https://raw.githubusercontent.com/GodLike631/test/refs/heads/main/datas/%E4%B9%A1%E6%9D%91%E7%94%B5%E8%A7%86.txt"
-}
-if len(haitun_lives) >= 5:
-    haitun_lives.insert(5, country_live_dict)
-else:
-    haitun_lives.append(country_live_dict)
-
 cnb_sites = json_cnb.get("sites", [])
 cnb_lives = json_cnb.get("lives", [])
 
-# 備份去重時需要的原有解析列表[cite: 8]
+# 備份去重時需要的原有解析列表
 combined_parses = json_haitun.get("parses", []) + json_cnb.get("parses", [])
 
-# ➕ 【核心合流：点播合并逻辑】[cite: 8]
-json_cnb["sites"] = haitun_sites + cnb_sites + MY_CUSTOM_SITES
+# ➕ 【手工特权点播去重锁】智能检测上游，若有冲突，物理蒸发上游重名 key 线路
+custom_keys = {site.get("key") for site in MY_CUSTOM_SITES if site.get("key")}
+upstream_sites = haitun_sites + cnb_sites
+clean_upstream_sites = [site for site in upstream_sites if site.get("key") not in custom_keys]
+json_cnb["sites"] = clean_upstream_sites + MY_CUSTOM_SITES
 
-# ➕ 【核心置中：直播精准插入至第 6 位逻辑】
-# 先把上游所有的原始直播大列表合并出来[cite: 8]
+# ➕ 【手工特权直播去重锁 & 从第6位正向依序后排核心算法】
+custom_live_names = {live.get("name") for live in MY_CUSTOM_LIVES if live.get("name")}
 base_lives = haitun_lives + cnb_lives
+clean_base_lives = [live for live in base_lives if live.get("name") not in custom_live_names]
 
-# 使用 reversed 反向遍历你的手工直播列表，确保你写的顺序能原样精准插入第 6 位（Index 5）
-for custom_live in reversed(MY_CUSTOM_LIVES):
-    if len(base_lives) >= 5:
-        base_lives.insert(5, custom_live)  # 👈 强制让你的单条大字典格式完完全全插入到 Index 5（也就是第 6 位）
+# 使用正向切片递增算法，强行让手工源第一个排在第 6 位，剩下的成梯队正向后排展开
+for i, custom_live in enumerate(MY_CUSTOM_LIVES):
+    if len(clean_base_lives) >= (5 + i):
+        clean_base_lives.insert(5 + i, custom_live)
     else:
-        base_lives.append(custom_live)
-json_cnb["lives"] = base_lives
+        clean_base_lives.append(custom_live)
+json_cnb["lives"] = clean_base_lives
 
 final_json_text = json.dumps(json_cnb, ensure_ascii=False, indent=4)
 
@@ -202,7 +200,7 @@ path_replacements = {
 for src, dst in path_replacements.items():
     final_json_text = final_json_text.replace(src, dst)
 
-thanks_warning = "\n\n👑 【特别致谢与版权声明】\n本接口的诞生离不开大后方几位业内顶流技术大佬的无私奉献，特此致谢：\n🐋 感谢鱼佬的付出 (源码基础: fish2018/webhtv，TG群: https://t.me/webhtv)\n 感谢佬的付出 (核心仓库: FGBLH/GHK，TG群: https://t.me/hshsjk9)"
+thanks_warning = "\n\n👑 【特别致谢与版权声明】\n本接口的诞生离不开大后方几位业内顶流技术大佬 of 无私奉献，特此致谢：\n🐋 感谢鱼佬的付出 (源码基础: fish2018/webhtv，TG群: https://t.me/webhtv)\n 感谢佬的付出 (核心仓库: FGBLH/GHK，TG群: https://t.me/hshsjk9)"
 welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚佬＆鱼佬的优质 resource 缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效或断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码！"
 
 try:
@@ -217,7 +215,7 @@ try:
         
     ordered_obj.update(final_obj)
     
-    # 🛡️ 绿色版专属核心：全自动全盘对象级物理擦除 18 禁不健康元素 (原汁原味保留)[cite: 8]
+    # 🛡️ 绿色版专属核心：全自动全盘对象级物理擦除 18 禁不健康元素 (原汁原味保留)
     clean_sites = []
     for site in ordered_obj.get("sites", []):
         site_str = json.dumps(site, ensure_ascii=False)
@@ -229,7 +227,6 @@ try:
         live_str = json.dumps(live, ensure_ascii=False)
         if "🔞" not in live_str and "18+" not in live_str and "有三级片" not in live_str:
             if live and isinstance(live, dict):
-                # 如果是你手工贴的这行没有给稳健UA头部，底层整容循环会自动帮它武装补齐！
                 if not live.get("ua") or live.get("ua") == "okhttp":
                     live["ua"] = "okhttp/5.3.2"
                 clean_lives.append(live)
@@ -237,16 +234,11 @@ try:
     ordered_obj["sites"] = clean_sites
     ordered_obj["lives"] = clean_lives
 
-    # 🎯 【靶向解密还原】：净化做完后，把乡村电视的名字完美恢复[cite: 8]
-    for live in ordered_obj.get("lives", []):
-        if live.get("name") == "乡村电视安全防屏蔽占位符" or "乡村电视" in live.get("name", ""):
-            live["name"] = "乡村电视 ｜Tg：@huliys9"
-
     # ====================================================================
-    # 🌟 【全新黑科技注入區：大屏體驗極致優化】[cite: 8]
+    # 🌟 【全新黑科技注入區：大屏體驗極致優化】
     # ====================================================================
     try:
-        # --- 1. 解析器去重與優化加载[cite: 8] ---
+        # --- 1. 解析器去重與優化加载 ---
         unique_parses = []
         seen_names = set()
         for p in combined_parses:
@@ -256,7 +248,7 @@ try:
                 seen_names.add(name)
         ordered_obj["parses"] = unique_parses
 
-        # --- 2. 首位注入国内高防低延迟 AliDNS 并修正拼写[cite: 8] ---
+        # --- 2. 首位注入国内高防低延迟 AliDNS 并修正拼写 ---
         if "doh" in ordered_obj and isinstance(ordered_obj["doh"], list):
             for doh_item in ordered_obj["doh"]:
                 if doh_item.get("url", "").endswith("/dns-quer"):
@@ -270,11 +262,11 @@ try:
             if not any(d.get("name") == "AliDNS" for d in ordered_obj["doh"]):
                 ordered_obj["doh"].insert(0, ali_doh)
 
-        # --- 3. 彻底移除直播 lives 列表末端的无用空对象 {} ，防闪退[cite: 8] ---
+        # --- 3. 彻底移除直播 lives 列表末端的无用空对象 {} ，防闪退 ---
         if "lives" in ordered_obj and isinstance(ordered_obj["lives"], list):
             ordered_obj["lives"] = [live for live in ordered_obj["lives"] if live]
 
-        # --- 4. 雲端高級去廣告 WebView JS 腳本強勢注入[cite: 8] ---
+        # --- 4. 雲端高級去廣告 WebView JS 腳本強勢注入（已合行为一行避免断行引号问题） ---
         custom_js_rules = [
             "console.log('蝴蝶影視綠色版高級WebView攔截器啟動');",
             "window.addEventListener('DOMContentLoaded', function() {",
@@ -282,10 +274,7 @@ try:
             "   Function.prototype.__constructor__ = Function.prototype.constructor;",
             "   Function.prototype.constructor = function() { if (arguments && typeof arguments[0] === 'string' && arguments[0].includes('debugger')) { return function(){}; } return Function.prototype.__constructor__.apply(this, arguments); };",
             "});",
-            "setInterval(() => {",
-            "   let selectors = ['.adv-class', '.pop-banner', '#notice-modal', '[id*=\"partner\"]', '[class*=\"baidu\"]', 'iframe[src*=\"game\"]', 'iframe[src*=\"bet\"]', '#pop-ad', '.sidebar-ads', 'a[href*=\"999\"]'];",
-            "   selectors.forEach(sel => { document.querySelectorAll(sel).forEach(el => el.remove()); });",
-            "}, 400);"
+            "setInterval(() => { let selectors = ['.adv-class', '.pop-banner', '#notice-modal', '[id*=\"partner\"]', '[class*=\"baidu\"]', 'iframe[src*=\"game\"]', 'iframe[src*=\"bet\"]', '#pop-ad', '.sidebar-ads', 'a[href*=\"999\"]']; selectors.forEach(sel => { document.querySelectorAll(sel).forEach(el => el.remove()); }); }, 400);"
         ]
 
         current_rules = ordered_obj.get("rules", [])
@@ -305,7 +294,7 @@ try:
         }
         ordered_obj["rules"] = [js_injection_rule] + [r for r in current_rules if r.get("name") != "老楊TV·雲端高級去廣告JS注入"]
 
-        # --- 5 & 6. 🏆 【终极完全体：热播精准置顶、单线打标清洗、网盘组件强效洗白与九大方阵智能分类】[cite: 8] ---
+        # --- 5 & 6. 🏆 【终极完全体：热播精准置顶、单线打标清洗、网盘组件强效洗白与九大方阵智能分类】 ---
         block_1_rebo = []         # 1. 🏆 热播影视专属置顶方阵 (仅限 key: 热播影视)
         block_2_yingshi = []      # 2. 影视/追剧/APP大类
         block_3_duanju = []       # 3. 短剧/剧场
@@ -435,13 +424,13 @@ try:
             block_5_cili +         
             block_9_fuli           
         )
-        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法圆满完成！[cite: 8]")
+        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法圆满完成！")
 
     except Exception as inner_e:
         print(f"⚠️ 提示：大屏高级美化优化处理时跳过，原因: {inner_e}")
 
     # ====================================================================
-    # 🌟 【写出最终文件与落盘】[cite: 8]
+    # 🌟 【写出最终文件与落盘】
     # ====================================================================
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
@@ -451,10 +440,10 @@ try:
     with open(tracker_path, 'w', encoding='utf-8') as f:
         f.write(output_filename)
         
-    print(f"🎉 【绿色精简防屏蔽纯净版】更新成功！配置名: {output_path}[cite: 8]")
+    print(f"🎉 【绿色精简防屏蔽纯净版】更新成功！配置名: {output_path}")
 
 except Exception as e:
-    print(f"❌ 严重错误：最后的本地过滤渲染失败，reason: {e}[cite: 8]")
+    print(f"❌ 严重错误：最后的本地过滤渲染失败，reason: {e}")
 
 if not os.path.exists(lock_file_path) or "-" not in (open(lock_file_path, 'r', encoding='utf-8').read() if os.path.exists(lock_file_path) else ""):
     with open(lock_file_path, 'w', encoding='utf-8') as f:
