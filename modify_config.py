@@ -14,6 +14,22 @@ lock_file_path = 'datas/控制开关.txt'
 tracker_path = 'datas/最新接口文件名.txt'
 
 # ====================================================================
+# ✍️ 【老杨专属：纯净版手工便捷加线区】
+# 提示：以后你想添加任何单独的爬虫线路，直接按照标准格式贴在下面中括号里即可！
+# 贴在这里的线路会雷打不动地并入总池子，并自动享受后面的绿色内容净化与方阵洗牌规则。
+# ====================================================================
+MY_CUSTOM_SITES = [
+    {
+        "key": "山楂影视",
+        "name": "山楂影视.py", 
+        "type": 3,
+        "api": "https://ghfast.top/https://raw.githubusercontent.com/GodLike631/test/refs/heads/main/datas/%E5%B1%B1%E6%A5%82%E5%BD%B1%E8%A7%86.py",
+        "searchable": 1,
+        "quickSearch": 1
+    }
+]
+
+# ====================================================================
 # ⏰ 【每月 1 号自动大洗牌与控制开关自动生成逻辑 - 引入月份判定版】 (原逻辑保留)
 # ====================================================================
 today = datetime.datetime.now()
@@ -129,7 +145,8 @@ cnb_lives = json_cnb.get("lives", [])
 # 備份去重時需要的原有解析列表
 combined_parses = json_haitun.get("parses", []) + json_cnb.get("parses", [])
 
-json_cnb["sites"] = haitun_sites + cnb_sites
+# ➕ 【核心合流】将你手工配置的自定义站点列表并入全国总池子
+json_cnb["sites"] = haitun_sites + cnb_sites + MY_CUSTOM_SITES
 json_cnb["lives"] = haitun_lives + cnb_lives
 
 final_json_text = json.dumps(json_cnb, ensure_ascii=False, indent=4)
@@ -157,8 +174,6 @@ welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】
 
 try:
     final_obj = json.loads(final_json_text)
-    
-    # 🌟【FongMi 规范性改造】公告与致谢合并到 notice，并物理擦除无用 warningText
     final_obj["notice"] = welcome_notice + thanks_warning
     if "warningText" in final_obj:
         final_obj.pop("warningText")
@@ -197,7 +212,7 @@ try:
     # 🌟【全新黑科技注入區：大屏體驗極致優化】
     # ====================================================================
     try:
-        # --- 1. 解析器去重與優化加載 ---
+        # --- 1. 解析器去重與優化加载 ---
         unique_parses = []
         seen_names = set()
         for p in combined_parses:
@@ -277,7 +292,7 @@ try:
             s_genre = site.get("genre", "")
             s_api = site.get("api", "")
             
-            # 清洗基础名称
+            # 清浅基础名称
             for char in ['丨', '┃', ' ']:
                 raw_name = raw_name.strip(char)
             raw_name = re.sub(r'\s+', ' ', raw_name)
@@ -292,7 +307,7 @@ try:
             if "ext" in site and site["ext"] == {}:
                 site["ext"] = ""
 
-            # 🛠️ 核心净化：网盘组件强行去后缀格式化，完美激活未配 Token 自动隐形机制
+            # 🛠️ 核心一键净化：网盘组件强行去后缀格式化，完美激活未配 Token 自动隐形机制
             if isinstance(s_api, str) and "PanWebShare" in s_api:
                 site["api"] = "csp_PanWebShare"
                 if "jar" in site:
@@ -383,19 +398,19 @@ try:
             if site.get("key") == "AQY":
                 site["name"] = "🦋 爱奇艺 ｜Tg：@huliys9"
 
-        # 👑 【新首页硬组装】热播影视置顶（Index 0），另一个热播"key": "rb"随大部队在综合影视区排列
+        # 👑 【新首页硬组装】"key": "热播影视" 携长致谢完美置顶（Index 0），另一个热播"key": "rb"随大部队在综合影视区排列
         ordered_obj["sites"] = (
-            block_1_rebo +         # 1. 🎯 "key": "热播影视" 绝对置顶[cite: 7]
-            block_2_yingshi +      # 2. 传统综合影视单线路 (包含回归的豆瓣首页和保留原位的 key: rb 线路)[cite: 7]
-            block_3_duanju +       # 3. 独立短剧
-            block_4_dongman +      # 4. 动漫新番
-            block_6_tiyu +         # 5. 体育直播
-            block_7_shaoer +       # 6. 少儿课堂
-            block_8_yinyue +       # 7. 音乐/听书/功能辅助线
-            block_5_cili +         # 8. 网盘/磁力/4K降权沉底区
-            block_9_fuli           # 9. 福利空队安全坠尾
+            block_1_rebo +         # 1. 🎯 "key": "热播影视" 绝对置顶[cite: 9]
+            block_2_yingshi +      # 2. 传统综合影视单线路 (包含回归的豆瓣首页和保留原位的 key: rb 线路)[cite: 9]
+            block_3_duanju +       # 3. 独立短剧[cite: 9]
+            block_4_dongman +      # 4. 动漫新番[cite: 9]
+            block_6_tiyu +         # 5. 体育直播[cite: 9]
+            block_7_shaoer +       # 6. 少儿课堂[cite: 9]
+            block_8_yinyue +       # 7. 音乐/听书/功能辅助线[cite: 9]
+            block_5_cili +         # 8. 网盘/磁力/4K降权沉底区[cite: 9]
+            block_9_fuli           # 9. 福利空队安全坠尾[cite: 9]
         )
-        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法圆满完成！热播影视成功抢占开机推荐，网盘全员洗白沉底。")
+        print(f"🚀 【洗牌结算】纯净绿色精简版洗牌算法圆满完成！热播影视成功抢占开机推荐，网盘全员洗白沉底。")
 
     except Exception as inner_e:
         print(f"⚠️ 提示：美化与智能分类优化处理时跳过，原因: {inner_e}")
