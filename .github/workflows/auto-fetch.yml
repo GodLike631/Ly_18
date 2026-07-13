@@ -2,11 +2,9 @@ name: 自动双源无损强行合并-备用线
 
 on:
   schedule:
-    # 🎯 避开整点阻塞，UTC 时间 0:00 和 12:00，换算北京时间刚好是早上 08:00 和晚上 20:00 准时合流清洗
     - cron: '0 0,12 * * *'
   workflow_dispatch: 
 
-# 🌟 显式强制赋予工作流写入权限，解决 128 报错的关键
 permissions: write-all
 
 jobs:
@@ -22,19 +20,16 @@ jobs:
       with:
         python-version: '3.10'
 
-    # 1. 下载两个标准公共大底包
     - name: Fetch target files
       run: |
         mkdir -p datas
         curl -L "https://cnb.cool/fish2018/xs/-/git/raw/main/api.json" -o datas/cnb.json
         curl -L "https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/ok%E6%B5%B7%E8%B1%9A.json" -o datas/haitun.json
 
-    # 2. 执行安全对象级绿色过滤与自适应改名脚本[cite: 6]
     - name: Text Merge JSON
       run: |
         python modify_config.py
 
-    # 3. 🎯【严格前置检查】捕捉合并后的最新变动内容，并向指定 Telegram 频道发射高亮通知
     - name: Analyze changes and Send Telegram Notification
       env:
         TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -43,22 +38,18 @@ jobs:
         git config --global core.quotepath false
         git add datas/
         
-        # 🛠️ 只有在暂存区存在实际文件内容变动时，才生成明细并触发通知[cite: 6]
         if ! git diff --cached --exit-code --quiet; then
           echo "检测到接口文件已发生更新，正在提取变更明细..."
           
           CURRENT_TIME=$(TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M")
           
-          # 🧠 从暂存区的 diff 中捕获新增和删除的线路名，手机端高亮独立粉红/灰色底色块处理
           ADDED_SITES=$(git diff --cached -U0 | grep '^[+][[:space:]]*"name":' | head -n 5 | sed -E 's/^[+][[:space:]]*"name":[[:space:]]*"([^"]+)".*/➕ ` \1 `/g' || true)
           DELETED_SITES=$(git diff --cached -U0 | grep '^[-][[:space:]]*"name":' | head -n 5 | sed -E 's/^[-][[:space:]]*"name":[[:space:]]*"([^"]+)".*/➖ ` \1 `/g' || true)
           
-          # 拼装基础通知文案（严格对齐指定的抬头：蝴蝶影视纯净版）
           MSG="🔔 *蝴蝶影视纯净版接口变更明细通知* 🔔%0A%0A"
           MSG="${MSG}📅 *更新时间*：${CURRENT_TIME} (北京时间)%0A"
           MSG="${MSG}🚀 *变动说明*：检测到上游数据源更新或手工区线路调整，新接口配置已全自动编译上链！%0A"
           
-          # 🌟 精细化醒目排版区域
           if [ ! -z "$ADDED_SITES" ] || [ ! -z "$DELETED_SITES" ]; then
             MSG="${MSG}%0A📊 *━━━━━━━━━━━━━━━*%0A📝 *【 变动明细预览 】*%0A"
             if [ ! -z "$ADDED_SITES" ]; then
@@ -70,10 +61,8 @@ jobs:
             MSG="${MSG}📊 *━━━━━━━━━━━━━━━*%0A"
           fi
           
-          # 严格对齐指定的特定结尾文案
           MSG="${MSG}%0A👑 纯净版链接已在后台无缝更新，更新接口即可，若电视端遇到断流请尝试重启软件或及时前往频道（@huliys9）获取当前最新密码锁！"
           
-          # 🚀 通过 curl 发射到 Telegram 专属通知频道 @huliys9
           if [ ! -z "$TG_TOKEN" ] && [ ! -z "$TG_CHAT_ID" ]; then
             curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
               -d "chat_id=${TG_CHAT_ID}" \
@@ -84,21 +73,20 @@ jobs:
             echo "⚠️ 提示：未检测到绑定的 TG_TOKEN 或 TG_CHAT_ID，跳过通知发送。"
           fi
         else
-          echo "接口文件无任何实际内容变化，跳过通知流程。"[cite: 6]
+          echo "接口文件无任何实际内容变化，跳过通知流程。"
         fi
 
-    # 4. 核心修正：全量文件比对与暂存机制，彻底杜绝提交空报错与死循环[cite: 6]
     - name: Commit and Push changes
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --global core.quotepath false
         
-        git add datas/[cite: 6]
+        git add datas/
         
-        if ! git diff --cached --exit-code --quiet; then[cite: 6]
-          git commit -m "双源自适应硬核净化合并 (蝴蝶影视纯净版系列): $(date +'%Y-%m-%d %H:%M:%S')"[cite: 6]
-          git push origin main[cite: 6]
+        if ! git diff --cached --exit-code --quiet; then
+          git commit -m "双源自适应硬核净化合并 (蝴蝶影视纯净版系列): $(date +'%Y-%m-%d %H:%M:%S')"
+          git push origin main
         else
-          echo "所有生成文件均无任何内容变化，跳过本次提交。"[cite: 6]
+          echo "所有生成文件均无任何内容变化，跳过本次提交。"
         fi
