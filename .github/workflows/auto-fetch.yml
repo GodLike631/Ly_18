@@ -68,7 +68,7 @@ jobs:
           # 🌟 强力注入支持单点复制的绿色纯净版专用订阅链接
           MSG="${MSG}%0A🔗 *【 纯净版专用链接 】* (点击可自动复制)：%0A\`${SUBSCRIBE_URL}\`%0A"
           
-          MSG="${MSG}%0A👑 纯净链接已在后台无缝更新，更新接口即可，若电视端遇到断流请尝试重启软件或及时前往频道（@huliys9）获取当前最新密码锁！"
+          MSG="${MSG}%0A👑 纯净版链接已在后台无缝更新，更新接口即可，若电视端遇到断流请尝试重启软件或及时前往频道（@huliys9）获取当前最新密码锁！"
           
           if [ ! -z "$TG_TOKEN" ] && [ ! -z "$TG_CHAT_ID" ]; then
             curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
