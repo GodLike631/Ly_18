@@ -46,6 +46,10 @@ jobs:
           ADDED_SITES=$(git diff --cached -U0 | grep '^[+][[:space:]]*"name":' | head -n 5 | sed -E 's/^[+][[:space:]]*"name":[[:space:]]*"([^"]+)".*/➕ ` \1 `/g' || true)
           DELETED_SITES=$(git diff --cached -U0 | grep '^[-][[:space:]]*"name":' | head -n 5 | sed -E 's/^[-][[:space:]]*"name":[[:space:]]*"([^"]+)".*/➖ ` \1 `/g' || true)
           
+          # 读取Python生成的最新文件名，用来动态拼装绝对不失效的专属订阅链接
+          LATEST_FILE=$(cat datas/最新接口文件名.txt || echo "蝴蝶影视纯净版.json")
+          SUBSCRIBE_URL="https://raw.githubusercontent.com/${{ github.repository }}/refs/heads/main/datas/${LATEST_FILE}"
+          
           MSG="🔔 *蝴蝶影视纯净版接口变更明细通知* 🔔%0A%0A"
           MSG="${MSG}📅 *更新时间*：${CURRENT_TIME} (北京时间)%0A"
           MSG="${MSG}🚀 *变动说明*：检测到上游数据源更新或手工区线路调整，新接口配置已全自动编译上链！%0A"
@@ -61,7 +65,10 @@ jobs:
             MSG="${MSG}📊 *━━━━━━━━━━━━━━━*%0A"
           fi
           
-          MSG="${MSG}%0A👑 纯净版链接已在后台无缝更新，更新接口即可，若电视端遇到断流请尝试重启软件或及时前往频道（@huliys9）获取当前最新密码锁！"
+          # 🌟 强力注入支持单点复制的绿色纯净版专用订阅链接
+          MSG="${MSG}%0A🔗 *【 纯净版专用链接 】* (点击可自动复制)：%0A\`${SUBSCRIBE_URL}\`%0A"
+          
+          MSG="${MSG}%0A👑 纯净链接已在后台无缝更新，更新接口即可，若电视端遇到断流请尝试重启软件或及时前往频道（@huliys9）获取当前最新密码锁！"
           
           if [ ! -z "$TG_TOKEN" ] && [ ! -z "$TG_CHAT_ID" ]; then
             curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
