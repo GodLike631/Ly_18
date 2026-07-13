@@ -9,17 +9,13 @@ import json
 cnb_path = 'datas/cnb.json'
 haitun_path = 'datas/haitun.json'
 
-# 控制开关和追踪器的文件路径
 lock_file_path = 'datas/控制开关.txt'
 tracker_path = 'datas/最新接口文件名.txt'
 
-# ====================================================================
-# 提示：单独加点播爬虫线贴在这里，如果上游有同 key 线路，脚本会自动蒸发上游、以此处为准。
-# ====================================================================
 MY_CUSTOM_SITES = [
     {
         "key": "山楂影视",
-        "name": "山楂影视.py", 
+        "name": "山楂影视.py",
         "type": 3,
         "api": "https://ghfast.top/https://raw.githubusercontent.com/GodLike631/test/refs/heads/main/datas/%E5%B1%B1%E6%A5%82%E5%BD%B1%E8%A7%86.py",
         "searchable": 1,
@@ -27,7 +23,7 @@ MY_CUSTOM_SITES = [
     },
     {
         "key": "红果短剧",
-        "name": "红果短剧.py",  
+        "name": "红果短剧.py", 
         "type": 3,
         "api": "https://ghfast.top/https://raw.githubusercontent.com/GodLike631/test/refs/heads/main/datas/%E7%BA%A2%E6%9E%9C%E7%9F%AD%E5%89%A7.py",
         "searchable": 1,
@@ -35,9 +31,6 @@ MY_CUSTOM_SITES = [
     }
 ]
 
-# ====================================================================
-# 如果手工加的直播线路名字与上游重复，脚本同样会自动触发“特权锁”全自动蒸发上游同名源！
-# ====================================================================
 MY_CUSTOM_LIVES = [
     {
         "name": "乡村电视 ｜Tg：@huliys9",
@@ -128,11 +121,8 @@ MY_CUSTOM_LIVES = [
     }
 ]
 
-# ====================================================================
-# ⏰ 【每月 1 号自动大洗牌与控制开关自动生成逻辑 - 引入月份判定版】 (原逻辑保留)
-# ====================================================================
 today = datetime.datetime.now()
-current_month = str(today.month) 
+current_month = str(today.month)
 is_reset_day = (today.day == 1)
 
 saved_month = ""
@@ -171,15 +161,12 @@ else:
 output_path = f"datas/{output_filename}"
 print(f"🎯 最终结算 -> 目标输出：{output_filename}")
 
-# ====================================================================
-# 🛡️ 【金蝉脱壳：绿色版过期旧线一键调包为纯文字滚动大轰炸】 (原逻辑保留)
-# ====================================================================
 old_configs = glob.glob('datas/蝴蝶影视纯净版*.json') + glob.glob('datas/老杨TV纯净版*.json') + glob.glob('datas/老杨TV无18*.json')
 for old_file in old_configs:
     if os.path.basename(old_file) != output_filename:
         try:
             trap_json = {
-                "spider": "", 
+                "spider": "",
                 "notice": "⚠️ 警告：当前“蝴蝶影视”绿色专线密码已过期断流！老链接已彻底作废！\n\n最新密码前往Tg频道（@huliys9）获取！",
                 "sites": [
                     {"key": "蝴蝶影视绿色纯文字提示", "name": "➡️ 请前往Tg频道（@huliys9）获取最新密码🚨 ➡️ 请前往Tg频道（@huliys9）获取最新密码", "type": 3, "api": "csp_JuDou", "searchable": 0, "quickSearch": 0, "filterable": 0},
@@ -199,10 +186,6 @@ for garbage in ['datas/local_config.json', *glob.glob('datas/config_*.json')]:
     try: os.remove(garbage)
     except: pass
 
-
-# ====================================================================
-# 🧠 【核心逻辑：正统 JSON 对象读取与合并逻辑】
-# ====================================================================
 def load_json_safe(path):
     if not os.path.exists(path):
         return {}
@@ -229,21 +212,17 @@ for item in haitun_lives:
 cnb_sites = json_cnb.get("sites", [])
 cnb_lives = json_cnb.get("lives", [])
 
-# 備份去重時需要的原有解析列表
 combined_parses = json_haitun.get("parses", []) + json_cnb.get("parses", [])
 
-# ➕ 【手工特权点播去重锁】智能检测上游，若有冲突，物理蒸发上游重名 key 线路
 custom_keys = {site.get("key") for site in MY_CUSTOM_SITES if site.get("key")}
 upstream_sites = haitun_sites + cnb_sites
 clean_upstream_sites = [site for site in upstream_sites if site.get("key") not in custom_keys]
 json_cnb["sites"] = clean_upstream_sites + MY_CUSTOM_SITES
 
-# ➕ 【手工特权直播去重锁 & 从第6位正向依序后排核心算法】
 custom_live_names = {live.get("name") for live in MY_CUSTOM_LIVES if live.get("name")}
 base_lives = haitun_lives + cnb_lives
 clean_base_lives = [live for live in base_lives if live.get("name") not in custom_live_names]
 
-# 使用正向切片递增算法，强行让手工源第一个排在第 6 位，剩下的成梯队正向后排展开
 for i, custom_live in enumerate(MY_CUSTOM_LIVES):
     if len(clean_base_lives) >= (5 + i):
         clean_base_lives.insert(5 + i, custom_live)
@@ -281,12 +260,11 @@ try:
         final_obj.pop("warningText")
     
     ordered_obj = {}
-    if "notice" in final_obj: 
+    if "notice" in final_obj:
         ordered_obj["notice"] = final_obj.pop("notice")
         
     ordered_obj.update(final_obj)
     
-    # 🛡️ 绿色版专属核心：全自动全盘对象级物理擦除 18 禁不健康元素 (原汁原味保留)
     clean_sites = []
     for site in ordered_obj.get("sites", []):
         site_str = json.dumps(site, ensure_ascii=False)
@@ -305,11 +283,7 @@ try:
     ordered_obj["sites"] = clean_sites
     ordered_obj["lives"] = clean_lives
 
-    # ====================================================================
-    # 🌟 【全新黑科技注入區：大屏體驗極致優化】
-    # ====================================================================
     try:
-        # --- 1. 解析器去重與優化加载 ---
         unique_parses = []
         seen_names = set()
         for p in combined_parses:
@@ -319,7 +293,6 @@ try:
                 seen_names.add(name)
         ordered_obj["parses"] = unique_parses
 
-        # --- 2. 首位注入国内高防低延迟 AliDNS 并修正拼写 ---
         if "doh" in ordered_obj and isinstance(ordered_obj["doh"], list):
             for doh_item in ordered_obj["doh"]:
                 if doh_item.get("url", "").endswith("/dns-quer"):
@@ -333,11 +306,9 @@ try:
             if not any(d.get("name") == "AliDNS" for d in ordered_obj["doh"]):
                 ordered_obj["doh"].insert(0, ali_doh)
 
-        # --- 3. 彻底移除直播 lives 列表末端的无用空对象 {} ，防闪退 ---
         if "lives" in ordered_obj and isinstance(ordered_obj["lives"], list):
             ordered_obj["lives"] = [live for live in ordered_obj["lives"] if live]
 
-        # --- 4. 雲端高級去廣告 WebView JS 腳本強勢注入（已合行为一行避免断行引号问题） ---
         custom_js_rules = [
             "console.log('蝴蝶影視綠色版高級WebView攔截器啟動');",
             "window.addEventListener('DOMContentLoaded', function() {",
@@ -365,18 +336,17 @@ try:
         }
         ordered_obj["rules"] = [js_injection_rule] + [r for r in current_rules if r.get("name") != "老楊TV·雲端高級去廣告JS注入"]
 
-        # --- 5 & 6. 🏆 【终极完全体：热播精准置顶、单线打标清洗、网盘组件强效洗白与九大方阵智能分类】 ---
-        block_1_rebo = []         # 1. 🏆 热播影视专属置顶方阵 (仅限 key: 热播影视)
-        block_2_yingshi = []      # 2. 影视/追剧/APP大类
-        block_3_duanju = []       # 3. 短剧/剧场
-        block_4_dongman = []      # 4. 动漫类
-        block_5_cili = []         # 5. 网盘/磁力/4K (配合Token未配自动不加载特性)
-        block_6_tiyu = []         # 6. 体育/看球/直播
-        block_7_shaoer = []       # 7. 少儿课堂/教育
-        block_8_yinyue = []       # 8. 音乐/听书/功能线/DJ
-        block_9_fuli = []         # 9. 福利/18禁 (绿色纯净版中此块全空)
+        block_1_rebo = []        
+        block_2_yingshi = []     
+        block_3_duanju = []      
+        block_4_dongman = []     
+        block_5_cili = []        
+        block_6_tiyu = []        
+        block_7_shaoer = []      
+        block_8_yinyue = []      
+        block_9_fuli = []        
 
-        tg_tail_count = 0  
+        tg_tail_count = 0 
         for site in ordered_obj.get("sites", []):
             if "name" not in site:
                 continue
@@ -485,24 +455,21 @@ try:
                 site["name"] = "🦋 爱奇艺 ｜Tg：@huliys9"
 
         ordered_obj["sites"] = (
-            block_1_rebo +         
-            block_2_yingshi +      
-            block_3_duanju +       
-            block_4_dongman +      
-            block_6_tiyu +         
-            block_7_shaoer +       
-            block_8_yinyue +       
-            block_5_cili +         
-            block_9_fuli           
+            block_1_rebo +        
+            block_2_yingshi +     
+            block_3_duanju +      
+            block_4_dongman +     
+            block_6_tiyu +        
+            block_7_shaoer +      
+            block_8_yinyue +      
+            block_5_cili +        
+            block_9_fuli          
         )
         print(f"🚀 【重排结算】纯净绿色精简版洗牌算法圆满完成！")
 
     except Exception as inner_e:
         print(f"⚠️ 提示：大屏高级美化优化处理时跳过，原因: {inner_e}")
 
-    # ====================================================================
-    # 🌟 【写出最终文件与落盘】
-    # ====================================================================
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
     with open(output_path, 'w', encoding='utf-8') as f:
