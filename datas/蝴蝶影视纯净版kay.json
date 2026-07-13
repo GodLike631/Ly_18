@@ -70,6 +70,14 @@
             "searchable": 1
         },
         {
+            "key": "youtube",
+            "name": "🦋 油管,py",
+            "type": 3,
+            "api": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/py/油管.py",
+            "category": "综合",
+            "searchable": 1
+        },
+        {
             "key": "MGtv",
             "name": "🦋 芒果TV.py",
             "type": 3,
@@ -1330,14 +1338,6 @@
             "searchable": 1
         },
         {
-            "key": "youtube",
-            "name": "🦋 油管直播,py",
-            "type": 3,
-            "api": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/py/油管.py",
-            "category": "体育/直播",
-            "searchable": 1
-        },
-        {
             "key": "kf",
             "name": "🦋 咖啡体育直播.py",
             "type": 3,
@@ -1366,6 +1366,14 @@
             "name": "🦋 聚合直播.py",
             "type": 3,
             "api": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/py/聚合直播.py",
+            "category": "体育/直播",
+            "searchable": 1
+        },
+        {
+            "key": "youtube",
+            "name": "🦋 油管直播,py",
+            "type": 3,
+            "api": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/py/油管直播.py",
             "category": "体育/直播",
             "searchable": 1
         },
@@ -2396,6 +2404,15 @@
             "name": "myTV「香港」｜Tg：@huliys9",
             "type": 3,
             "url": "https://iptv.yang-1989.xyz/myTV/playlist.m3u",
+            "epg": "https://material.yang-1989.xyz/epg.xml.gz",
+            "ua": "okhttp/3.8.1",
+            "timeout": 10,
+            "playerType": 2
+        },
+        {
+            "name": "Sport「体育」｜Tg：@huliys9",
+            "type": 3,
+            "url": "https://cdn-1.yang-1989.xyz/sprt/playlist.m3u",
             "epg": "https://material.yang-1989.xyz/epg.xml.gz",
             "ua": "okhttp/3.8.1",
             "timeout": 10,
