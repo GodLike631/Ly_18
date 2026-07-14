@@ -161,7 +161,7 @@ else:
 output_path = f"datas/{output_filename}"
 print(f"🎯 最终结算 -> 目标输出：{output_filename}")
 
-# ==================== [ 核心修正 1/2：在老配置被覆盖/删除前，先将合法的旧接口加载到内存 ] ====================
+# ==================== [ 核心逻辑：在覆盖老配置前备份旧数据 ] ====================
 old_valid_json_data = {}
 try:
     if os.path.exists(tracker_path):
@@ -171,15 +171,13 @@ try:
             if os.path.exists(last_active_filepath):
                 with open(last_active_filepath, 'r', encoding='utf-8') as f_last_json:
                     temp_data = json.load(f_last_json)
-                    # 只有当旧文件包含真正的 sites 列表，且不是大轰炸警告包时，才用来作为比对基础
                     if "sites" in temp_data and len(temp_data["sites"]) > 2:
                         old_valid_json_data = temp_data
                         print(f"📑 成功捕获上一次真实的历史接口: {last_active_filename}")
 except Exception as backup_err:
     print(f"⚠️ 读取历史备份失败（可能首次运行）: {backup_err}")
-# ===================================================================================================
 
-# 往下执行金蝉脱壳（此时在内存中我们已经拿到了未被污染的旧数据）
+# 往下执行金蝉脱壳
 old_configs = glob.glob('datas/蝴蝶影视纯净版*.json') + glob.glob('datas/老杨TV纯净版*.json') + glob.glob('datas/老杨TV无18*.json')
 for old_file in old_configs:
     if os.path.basename(old_file) != output_filename:
@@ -484,17 +482,16 @@ try:
             block_5_cili +         
             block_9_fuli          
         )
-        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法完成。")
+        print(f"🚀 【重排结算】洗牌算法完成。")
 
     except Exception as inner_e:
         print(f"⚠️ 提示：大屏高级美化优化处理时跳过，原因: {inner_e}")
 
-    # ==================== [ 核心修正 2/2：精简安全的纯文本输出，避免 TG Markdown 崩溃 ] ====================
+    # ==================== [ 核心逻辑：精准安全的差分对比 ] ====================
     added_sites_str = ""
     deleted_sites_str = ""
     try:
         if old_valid_json_data and "sites" in old_valid_json_data:
-            # key -> 网站名字映射
             old_sites_map = {s.get("key"): s.get("name", s.get("key")) for s in old_valid_json_data.get("sites", []) if s.get("key")}
             new_sites_map = {s.get("key"): s.get("name", s.get("key")) for s in ordered_obj.get("sites", []) if s.get("key")}
             
@@ -504,10 +501,9 @@ try:
             added_keys = new_keys - old_keys
             deleted_keys = old_keys - new_keys
             
-            # 使用非常纯净、过滤特殊 Markdown 格式的文本：
             if added_keys:
                 added_lines = []
-                for k in list(added_keys)[:6]: # 限制前 6 条显示
+                for k in list(added_keys)[:6]:
                     clean_name = new_sites_map[k].replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
                     added_lines.append(f" - {clean_name}")
                 added_sites_str = "➕ 新增接口：\n" + "\n".join(added_lines)
@@ -521,12 +517,10 @@ try:
     except Exception as diff_err:
         print(f"⚠️ 差分对比出错: {diff_err}")
 
-    # 将安全的文本格式输出给 GitHub Workflow，防止特殊符号引发 TG 崩溃
     with open('datas/added_sites.txt', 'w', encoding='utf-8') as f_add:
         f_add.write(added_sites_str.strip())
     with open('datas/deleted_sites.txt', 'w', encoding='utf-8') as f_del:
         f_del.write(deleted_sites_str.strip())
-    # ===================================================================================================
 
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
