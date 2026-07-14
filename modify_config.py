@@ -94,14 +94,6 @@ MY_CUSTOM_LIVES = [
       "playerType": 2
     },
     {
-      "name": "Live「直播」｜Tg：@huliys9",
-      "type": 3,
-      "url": "https://live.yang-1989.eu.org/Live.m3u",
-      "ua": "okhttp/3.8.1",
-      "timeout": 10,
-      "playerType": 2
-    },
-    {
       "name": "myTV「香港」｜Tg：@huliys9",
       "type": 3,
       "url": "https://iptv.yang-1989.xyz/myTV/playlist.m3u",
