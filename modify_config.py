@@ -140,10 +140,10 @@ if is_reset_day and saved_month != current_month:
     current_token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=3))
     with open(lock_file_path, 'w', encoding='utf-8') as f:
         f.write(f"{current_month}-{current_token}")
-    print(f"⏰ 【每月1号全新硬核洗牌】检测到进入新月份 {current_month} 月！已全自动抽签生成本月新密锁: {current_token}")
+    print(f"⏰ 【每月1号洗牌】生成本月新密锁: {current_token}")
 elif is_reset_day and saved_month == current_month:
     current_token = saved_code
-    print(f"🔒 【安全阀拦截】今日 1 号已经是当月第二次运行，保持原暗号: {current_token}")
+    print(f"🔒 保持原暗号: {current_token}")
 else:
     if not saved_code or len(saved_code) != 3 or "-" not in (content if os.path.exists(lock_file_path) else ""):
         current_token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=3))
@@ -161,10 +161,9 @@ else:
 output_path = f"datas/{output_filename}"
 print(f"🎯 最终结算 -> 目标输出：{output_filename}")
 
-# ==================== [ 核心修正：备份最老的有效配置文件用于差异比对 ] ====================
+# ==================== [ 核心修正 1/2：在老配置被覆盖/删除前，先将合法的旧接口加载到内存 ] ====================
 old_valid_json_data = {}
 try:
-    # 尝试在“金蝉脱壳”警告文本覆盖前，读取上一个记录的最新接口文件
     if os.path.exists(tracker_path):
         with open(tracker_path, 'r', encoding='utf-8') as f_track:
             last_active_filename = f_track.read().strip()
@@ -172,14 +171,15 @@ try:
             if os.path.exists(last_active_filepath):
                 with open(last_active_filepath, 'r', encoding='utf-8') as f_last_json:
                     temp_data = json.load(f_last_json)
-                    # 如果不是已经过期的“警告包”，就作为比对基础
+                    # 只有当旧文件包含真正的 sites 列表，且不是大轰炸警告包时，才用来作为比对基础
                     if "sites" in temp_data and len(temp_data["sites"]) > 2:
                         old_valid_json_data = temp_data
-                        print(f"📑 成功捕获到上一次的有效历史接口用于差分对比: {last_active_filename}")
+                        print(f"📑 成功捕获上一次真实的历史接口: {last_active_filename}")
 except Exception as backup_err:
-    print(f"⚠️ 尝试抓取历史接口备份时跳过: {backup_err}")
-# ==================================================================================
+    print(f"⚠️ 读取历史备份失败（可能首次运行）: {backup_err}")
+# ===================================================================================================
 
+# 往下执行金蝉脱壳（此时在内存中我们已经拿到了未被污染的旧数据）
 old_configs = glob.glob('datas/蝴蝶影视纯净版*.json') + glob.glob('datas/老杨TV纯净版*.json') + glob.glob('datas/老杨TV无18*.json')
 for old_file in old_configs:
     if os.path.basename(old_file) != output_filename:
@@ -197,7 +197,7 @@ for old_file in old_configs:
             }
             with open(old_file, 'w', encoding='utf-8') as f:
                 json.dump(trap_json, f, ensure_ascii=False, indent=4)
-            print(f"📡 【金蝉脱壳】已成功将过期旧线调包为纯文字大轰炸: {old_file}")
+            print(f"📡 【金蝉脱壳】已将过期旧线调包为大轰炸: {old_file}")
         except:
             pass
 
@@ -212,7 +212,7 @@ def load_json_safe(path):
         try:
             return json.load(f)
         except Exception as e:
-            print(f"❌ 错误：{path} JSON 格式不正确！无法解析。")
+            print(f"❌ 错误：{path} JSON 格式不正确。")
             return {}
 
 json_cnb = load_json_safe(cnb_path)
@@ -270,7 +270,7 @@ for src, dst in path_replacements.items():
     final_json_text = final_json_text.replace(src, dst)
 
 thanks_warning = "\n\n👑 【特别致谢与版权声明】\n本接口的诞生离不开大后方几位业内顶流技术大佬 of 无私奉献，特此致谢：\n🐋 感谢鱼佬的付出 (源码基础: fish2018/webhtv，TG群: https://t.me/webhtv)\n 感谢佬的付出 (核心仓库: FGBLH/GHK，TG群: https://t.me/hshsjk9)"
-welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚佬＆鱼佬的优质 resource 缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效或断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码！"
+welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚佬＆鱼佬的优质 resource 缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效 or 断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码！"
 
 try:
     final_obj = json.loads(final_json_text)
@@ -484,46 +484,49 @@ try:
             block_5_cili +         
             block_9_fuli          
         )
-        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法圆满完成！")
+        print(f"🚀 【重排结算】纯净绿色精简版洗牌算法完成。")
 
     except Exception as inner_e:
         print(f"⚠️ 提示：大屏高级美化优化处理时跳过，原因: {inner_e}")
 
-    # ==================== [ 核心修正：差分比对算法，精准解析新增/删除接口 ] ====================
+    # ==================== [ 核心修正 2/2：精简安全的纯文本输出，避免 TG Markdown 崩溃 ] ====================
     added_sites_str = ""
     deleted_sites_str = ""
     try:
-        # 如果获取到了上一次正确的旧配置结构，我们就提取出旧 key 集合
         if old_valid_json_data and "sites" in old_valid_json_data:
-            # key-name 键值对映射，使我们显示变动明细时更人性化（能直接显示网站美化后的名字）
+            # key -> 网站名字映射
             old_sites_map = {s.get("key"): s.get("name", s.get("key")) for s in old_valid_json_data.get("sites", []) if s.get("key")}
             new_sites_map = {s.get("key"): s.get("name", s.get("key")) for s in ordered_obj.get("sites", []) if s.get("key")}
             
             old_keys = set(old_sites_map.keys())
             new_keys = set(new_sites_map.keys())
             
-            # 集合差集计算变动
             added_keys = new_keys - old_keys
             deleted_keys = old_keys - new_keys
             
+            # 使用非常纯净、过滤特殊 Markdown 格式的文本：
             if added_keys:
-                # 提取前 5 个变更显示，防止 TG 消息过长爆炸
-                added_list = [f"➕ ` {new_sites_map[k]} `" for k in list(added_keys)[:5]]
-                added_sites_str = "%0A".join(added_list)
-                print(f"🔍 [差分对比] 发现新增接口: {list(added_keys)}")
+                added_lines = []
+                for k in list(added_keys)[:6]: # 限制前 6 条显示
+                    clean_name = new_sites_map[k].replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
+                    added_lines.append(f" - {clean_name}")
+                added_sites_str = "➕ 新增接口：\n" + "\n".join(added_lines)
+                
             if deleted_keys:
-                deleted_list = [f"➖ ` {old_sites_map[k]} `" for k in list(deleted_keys)[:5]]
-                deleted_sites_str = "%0A".join(deleted_list)
-                print(f"🔍 [差分对比] 发现删除接口: {list(deleted_keys)}")
+                deleted_lines = []
+                for k in list(deleted_keys)[:6]:
+                    clean_name = old_sites_map[k].replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
+                    deleted_lines.append(f" - {clean_name}")
+                deleted_sites_str = "➖ 删除接口：\n" + "\n".join(deleted_lines)
     except Exception as diff_err:
-        print(f"⚠️ 差分算力对比失败，原因: {diff_err}")
+        print(f"⚠️ 差分对比出错: {diff_err}")
 
-    # 总是创建（或覆盖）临时比对结果文件，确保 Workflow 能安全抓到
+    # 将安全的文本格式输出给 GitHub Workflow，防止特殊符号引发 TG 崩溃
     with open('datas/added_sites.txt', 'w', encoding='utf-8') as f_add:
-        f_add.write(added_sites_str)
+        f_add.write(added_sites_str.strip())
     with open('datas/deleted_sites.txt', 'w', encoding='utf-8') as f_del:
-        f_del.write(deleted_sites_str)
-    # ==================================================================================
+        f_del.write(deleted_sites_str.strip())
+    # ===================================================================================================
 
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
@@ -533,10 +536,10 @@ try:
     with open(tracker_path, 'w', encoding='utf-8') as f:
         f.write(output_filename)
         
-    print(f"🎉 【绿色精简防屏蔽纯净版】更新成功！配置名: {output_path}")
+    print(f"🎉 更新成功！配置名: {output_path}")
 
 except Exception as e:
-    print(f"❌ 严重错误：最后的本地过滤渲染失败，reason: {e}")
+    print(f"❌ 严重错误：最后的本地过滤渲染失败，原因: {e}")
 
 if not os.path.exists(lock_file_path) or "-" not in (open(lock_file_path, 'r', encoding='utf-8').read() if os.path.exists(lock_file_path) else ""):
     with open(lock_file_path, 'w', encoding='utf-8') as f:
