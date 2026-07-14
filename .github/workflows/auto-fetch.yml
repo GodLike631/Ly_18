@@ -39,23 +39,31 @@ jobs:
         git add datas/
         
         if ! git diff --cached --exit-code --quiet; then
-          echo "检测到接口文件已发生更新，正在提取变更明细..."
+          echo "检测到文件变动，开始封装通知消息..."
           
           CURRENT_TIME=$(TZ=Asia/Shanghai date "+%Y-%m-%d %H:%M")
           
-          ADDED_SITES=$(git diff --cached -U0 | grep '^[+][[:space:]]*"name":' | head -n 5 | sed -E 's/^[+][[:space:]]*"name":[[:space:]]*"([^"]+)".*/➕ ` \1 `/g' || true)
-          DELETED_SITES=$(git diff --cached -U0 | grep '^[-][[:space:]]*"name":' | head -n 5 | sed -E 's/^[-][[:space:]]*"name":[[:space:]]*"([^"]+)".*/➖ ` \1 `/g' || true)
+          # 读取 Python 精准对比生成的无敏感格式纯文本
+          ADDED_SITES=""
+          DELETED_SITES=""
           
-          # 读取Python生成的最新文件名，用来动态拼装绝对不失效的专属订阅链接
+          if [ -f "datas/added_sites.txt" ]; then
+            # 替换普通换行为 Telegram 专用的 URL 换行编码 %0A
+            ADDED_SITES=$(cat datas/added_sites.txt | sed ':a;N;$!ba;s/\n/%0A/g')
+          fi
+          if [ -f "datas/deleted_sites.txt" ]; then
+            DELETED_SITES=$(cat datas/deleted_sites.txt | sed ':a;N;$!ba;s/\n/%0A/g')
+          fi
+          
           LATEST_FILE=$(cat datas/最新接口文件名.txt || echo "蝴蝶影视纯净版.json")
           SUBSCRIBE_URL="https://raw.githubusercontent.com/${{ github.repository }}/refs/heads/main/datas/${LATEST_FILE}"
           
-          MSG="🔔 *蝴蝶影视纯净版接口变更明细通知* 🔔%0A%0A"
+          MSG="🔔 *蝴蝶影视纯净版接口变更通知* 🔔%0A%0A"
           MSG="${MSG}📅 *更新时间*：${CURRENT_TIME} (北京时间)%0A"
-          MSG="${MSG}🚀 *变动说明*：检测到上游数据源更新或手工区线路调整，新接口配置已全自动编译上链！%0A"
+          MSG="${MSG}🚀 *变动说明*：检测到数据源更新，新接口配置已上链！%0A"
           
           if [ ! -z "$ADDED_SITES" ] || [ ! -z "$DELETED_SITES" ]; then
-            MSG="${MSG}%0A📊 *━━━━━━━━━━━━━━━*%0A📝 *【 变动明细预览 】*%0A"
+            MSG="${MSG}%0A📝 *【 变动明细 】*%0A"
             if [ ! -z "$ADDED_SITES" ]; then
               MSG="${MSG}${ADDED_SITES}%0A"
             fi
@@ -65,22 +73,24 @@ jobs:
             MSG="${MSG}📊 *━━━━━━━━━━━━━━━*%0A"
           fi
           
-          # 🌟 强力注入支持单点复制的绿色纯净版专用订阅链接
-          MSG="${MSG}%0A🔗 *【 纯净版专用链接 】* (点击可自动复制)：%0A\`${SUBSCRIBE_URL}\`%0A"
-          
-          MSG="${MSG}%0A👑 纯净版链接已在后台无缝更新，更新接口即可，若电视端遇到断流请尝试重启软件或及时前往频道（@huliys9）获取当前最新密码锁！"
+          MSG="${MSG}%0A🔗 *【 订阅链接 】*：%0A\`${SUBSCRIBE_URL}\`%0A"
+          MSG="${MSG}%0A👑 电视端若遇断流，请重启软件，最新密码请至频道（@huliys9）查看！"
           
           if [ ! -z "$TG_TOKEN" ] && [ ! -z "$TG_CHAT_ID" ]; then
+            # 使用 URL 编码形式传递，避免 curl 参数中 Markdown 解析器因为字符断流而出错
             curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
               -d "chat_id=${TG_CHAT_ID}" \
               -d "parse_mode=Markdown" \
               -d "text=${MSG}"
-            echo "Telegram 频道通知发送成功！"
+            echo "Telegram 通知已成功分发！"
           else
-            echo "⚠️ 提示：未检测到绑定的 TG_TOKEN 或 TG_CHAT_ID，跳过通知发送。"
+            echo "⚠️ 提示：未检测到 TG_TOKEN 或 TG_CHAT_ID，跳过通知发送。"
           fi
+          
+          # 清除本次临时产生的文件，防止下一次脚本重复污染
+          rm -f datas/added_sites.txt datas/deleted_sites.txt
         else
-          echo "接口文件无任何实际内容变化，跳过通知流程。"
+          echo "接口无实际变化，跳过通知流程。"
         fi
 
     - name: Commit and Push changes
@@ -95,5 +105,5 @@ jobs:
           git commit -m "双源自适应硬核净化合并 (蝴蝶影视纯净版系列): $(date +'%Y-%m-%d %H:%M:%S')"
           git push origin main
         else
-          echo "所有生成文件均无任何内容变化，跳过本次提交。"
+          echo "未检测到内容变化，无需提交。"
         fi
