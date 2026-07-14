@@ -14,6 +14,9 @@ haitun_path = 'datas/haitun.json'
 lock_file_path = 'datas/控制开关.txt'
 tracker_path = 'datas/最新接口文件名.txt'
 
+# 🌟 修复点：将历史备份变量直接初始化到最顶层全局域，彻底解决 NameError 报错
+old_valid_json_data = {}
+
 # ====================================================================
 # ✍️ 【通道一：老杨专属点播手工加线区】
 # ====================================================================
@@ -28,7 +31,7 @@ MY_CUSTOM_SITES = [
     },
     {
         "key": "红果短剧",
-        "name": "红果短剧.py", 
+        "name": "红果短剧.py",
         "type": 3,
         "api": "https://ghfast.top/https://raw.githubusercontent.com/GodLike631/test/refs/heads/main/datas/%E7%BA%A2%E6%9E%9C%E7%9F%AD%E5%89%A7.py",
         "searchable": 1,
@@ -170,7 +173,6 @@ output_path = f"datas/{output_filename}"
 print(f"🎯 最终结算 -> 目标输出：{output_filename}")
 
 # ==================== [ 核心逻辑：在覆盖老配置前备份旧数据 ] ====================
-old_valid_json_data = {}
 try:
     if os.path.exists(tracker_path):
         with open(tracker_path, 'r', encoding='utf-8') as f_track:
@@ -275,8 +277,8 @@ path_replacements = {
 for src, dst in path_replacements.items():
     final_json_text = final_json_text.replace(src, dst)
 
-thanks_warning = "\n\n👑 【特别致谢与版权声明】\n本接口的诞生离不开大后方几位业内顶流技术大佬 of 无私奉献，特此致谢：\n🐋 感谢鱼佬的付出 (源码基础: fish2018/webhtv，TG群: https://t.me/webhtv)\n 感谢佬的付出 (核心仓库: FGBLH/GHK，TG群: https://t.me/hshsjk9)"
-welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚佬＆鱼佬的优质 resource 缝合而成，纯净无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效 or 断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码！"
+thanks_warning = "\n\n👑 【特别致谢与版权声明】\n本接口的诞生离不开大后方几位业内顶流技术大佬的无私奉献，特此致谢：\n🐋 感谢鱼佬的付出 (源码基础: fish2018/webhtv，TG群: https://t.me/webhtv)\n🐬 感谢海豚佬的付出 (核心仓库: FGBLH/GHK，TG群: https://t.me/hshsjk9)"
+welcome_notice = "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚佬＆鱼佬的优质绿色资源无损缝合而成，纯净绿色无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效 or 断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码锁！"
 
 try:
     final_obj = json.loads(final_json_text)
@@ -467,24 +469,24 @@ try:
             block_6_tiyu + block_7_shaoer + block_8_yinyue + block_5_cili + block_9_fuli
         )
 
-        # 🛡️ 纯净版硬核物理清洗核心算法：二次清洗合并后的新 sites 与 lives，确保 100% 滤除 18+ 敏感词[cite: 7]
+        # 🛡️ 纯净版硬核物理清洗核心算法：二次清洗合并后的新 sites 与 lives，确保 100% 滤除 18+ 敏感词
         clean_sites = []
         for site in ordered_obj.get("sites", []):
             site_str = json.dumps(site, ensure_ascii=False)
-            if "🔞" not in site_str and "18+" not in site_str and "有三级片" not in site_str:[cite: 7]
+            if "🔞" not in site_str and "18+" not in site_str and "有三级片" not in site_str:
                 clean_sites.append(site)
                  
         clean_lives = []
         for live in ordered_obj.get("lives", []):
             live_str = json.dumps(live, ensure_ascii=False)
-            if "🔞" not in live_str and "18+" not in live_str and "有三级片" not in live_str:[cite: 7]
+            if "🔞" not in live_str and "18+" not in live_str and "有三级片" not in live_str:
                 if live and isinstance(live, dict):
                     if not live.get("ua") or live.get("ua") == "okhttp":
-                        live["ua"] = "okhttp/5.3.2"[cite: 7]
+                        live["ua"] = "okhttp/5.3.2"
                     clean_lives.append(live)
                 
-        ordered_obj["sites"] = clean_sites[cite: 7]
-        ordered_obj["lives"] = clean_lives[cite: 7]
+        ordered_obj["sites"] = clean_sites
+        ordered_obj["lives"] = clean_lives
 
         print(f"🚀 【洗牌结算】蝴蝶纯净绿色版过滤重排全自动落地！")
 
