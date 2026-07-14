@@ -94,9 +94,26 @@ MY_CUSTOM_LIVES = [
       "playerType": 2
     },
     {
+      "name": "Live「直播」｜Tg：@huliys9",
+      "type": 3,
+      "url": "https://live.yang-1989.eu.org/Live.m3u",
+      "ua": "okhttp/3.8.1",
+      "timeout": 10,
+      "playerType": 2
+    },
+    {
       "name": "myTV「香港」｜Tg：@huliys9",
       "type": 3,
       "url": "https://iptv.yang-1989.xyz/myTV/playlist.m3u",
+      "epg":"https://material.yang-1989.xyz/epg.xml.gz",
+      "ua": "okhttp/3.8.1",
+      "timeout": 10,
+      "playerType": 2
+    },
+    {
+      "name": "Sport「体育」｜Tg：@huliys9",
+      "type": 3,
+      "url": "https://cdn-1.yang-1989.xyz/sprt/playlist.m3u",
       "epg":"https://material.yang-1989.xyz/epg.xml.gz",
       "ua": "okhttp/3.8.1",
       "timeout": 10,
@@ -158,7 +175,7 @@ try:
                         old_valid_json_data = temp_data
                         print(f"📑 成功捕获上一次真实的历史接口: {last_active_filename}")
 except Exception as backup_err:
-    print(f"⚠️ 读取历史备份失败（可能首次运行）: {backup_err}")
+    print(f"⚠️ 读取历史备份失败: {backup_err}")
 
 # 往下执行金蝉脱壳
 old_configs = glob.glob('datas/蝴蝶影视纯净版*.json') + glob.glob('datas/老杨TV纯净版*.json') + glob.glob('datas/老杨TV无18*.json')
@@ -470,40 +487,59 @@ try:
     except Exception as inner_e:
         print(f"⚠️ 提示：大屏高级美化优化处理时跳过，原因: {inner_e}")
 
-    # ==================== [ 核心逻辑：精准安全的差分对比 ] ====================
-    added_sites_str = ""
-    deleted_sites_str = ""
+    # ==================== [ 终极安全升级：同时比对 SITES 和 LIVES 变更 ] ====================
+    added_items_list = []
+    deleted_items_list = []
+    
     try:
-        if old_valid_json_data and "sites" in old_valid_json_data:
+        if old_valid_json_data:
+            # 1. 对比视频站点 (Sites) 变动
             old_sites_map = {s.get("key"): s.get("name", s.get("key")) for s in old_valid_json_data.get("sites", []) if s.get("key")}
             new_sites_map = {s.get("key"): s.get("name", s.get("key")) for s in ordered_obj.get("sites", []) if s.get("key")}
             
-            old_keys = set(old_sites_map.keys())
-            new_keys = set(new_sites_map.keys())
+            old_site_keys = set(old_sites_map.keys())
+            new_site_keys = set(new_sites_map.keys())
             
-            added_keys = new_keys - old_keys
-            deleted_keys = old_keys - new_keys
+            added_site_keys = new_site_keys - old_site_keys
+            deleted_site_keys = old_site_keys - new_site_keys
             
-            if added_keys:
-                added_lines = []
-                for k in list(added_keys)[:6]:
-                    clean_name = new_sites_map[k].replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
-                    added_lines.append(f" - {clean_name}")
-                added_sites_str = "➕ 新增接口：\n" + "\n".join(added_lines)
+            for k in list(added_site_keys)[:6]:
+                clean_name = new_sites_map[k].replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
+                added_items_list.append(f" - [站点] {clean_name}")
+            for k in list(deleted_site_keys)[:6]:
+                clean_name = old_sites_map[k].replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
+                deleted_items_list.append(f" - [站点] {clean_name}")
+
+            # 2. 对比直播源线路 (Lives) 变动
+            # 直播通常以 "name" 属性作为主键进行过滤和排序
+            old_lives_map = {l.get("name"): l.get("name") for l in old_valid_json_data.get("lives", []) if l.get("name")}
+            new_lives_map = {l.get("name"): l.get("name") for l in ordered_obj.get("lives", []) if l.get("name")}
+            
+            old_live_names = set(old_lives_map.keys())
+            new_live_names = set(new_lives_map.keys())
+            
+            added_live_names = new_live_names - old_live_names
+            deleted_live_names = old_live_names - new_live_names
+            
+            for name in list(added_live_names)[:6]:
+                clean_name = name.replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
+                added_items_list.append(f" - [直播] {clean_name}")
+            for name in list(deleted_live_names)[:6]:
+                clean_name = name.replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
+                deleted_items_list.append(f" - [直播] {clean_name}")
                 
-            if deleted_keys:
-                deleted_lines = []
-                for k in list(deleted_keys)[:6]:
-                    clean_name = old_sites_map[k].replace('*', '').replace('_', '').replace('`', '').replace('[', '').replace(']', '')
-                    deleted_lines.append(f" - {clean_name}")
-                deleted_sites_str = "➖ 删除接口：\n" + "\n".join(deleted_lines)
     except Exception as diff_err:
-        print(f"⚠️ 差分对比出错: {diff_err}")
+        print(f"⚠️ 双向差分比对出错: {diff_err}")
+
+    # 转为无敏感字符的纯文本保存给工作流
+    added_sites_str = "➕ 新增线路：\n" + "\n".join(added_items_list) if added_items_list else ""
+    deleted_sites_str = "➖ 删除线路：\n" + "\n".join(deleted_items_list) if deleted_items_list else ""
 
     with open('datas/added_sites.txt', 'w', encoding='utf-8') as f_add:
         f_add.write(added_sites_str.strip())
     with open('datas/deleted_sites.txt', 'w', encoding='utf-8') as f_del:
         f_del.write(deleted_sites_str.strip())
+    # ====================================================================================
 
     output_json_text = json.dumps(ordered_obj, ensure_ascii=False, indent=4)
 
