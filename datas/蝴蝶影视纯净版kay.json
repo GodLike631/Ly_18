@@ -1,5 +1,5 @@
 {
-    "notice": "👑 欢迎使用【蝴蝶影视粉丝专属缝合绿色版专线】！本接口由蝴蝶影视结合佬&鱼佬的优质绿色资源无损缝合而成，纯净绿色无污。🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效 or 断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码锁！\n\n👑如果遇到失效 or 断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码锁！",
+    "notice": "👑 欢迎使用【蝴蝶影视粉丝专属绿色纯净线】！本接口由蝴蝶影视结合海豚佬＆鱼佬的优质绿色资源无损缝合而成，纯净绿色无广告！🚨 重要提示：本接口密码不定期全自动更换！如果遇到失效 or 断流，请及时回 Telegram 频道（@huliys9）获取当前最新密码锁！\n\n👑 【特别致谢与版权声明】\n本接口的诞生离不开大后方几位业内顶流技术大佬的无私奉献，特此致谢：\n🐋 感谢鱼佬的付出 (源码基础: fish2018/webhtv，TG群: https://t.me/webhtv)\n🐬 感谢海豚佬的付出 (核心仓库: FGBLH/GHK，TG群: https://t.me/hshsjk9)",
     "spider": "https://cnb.cool/fish2018/xs/-/git/raw/main/spider.jar",
     "wallpaper": "http://127.0.0.1:9978/proxy?do=wallpaper",
     "logo": "https://img.naixiai.cn/2026/06/18/IMG_6638.jpeg",
@@ -1564,6 +1564,14 @@
             "category": "少儿"
         },
         {
+            "key": "smdj",
+            "name": "🦋 星芽短剧.py",
+            "type": 3,
+            "api": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/py/星芽短剧.py",
+            "category": "音乐",
+            "searchable": 0
+        },
+        {
             "key": "hgdj",
             "name": "🦋 红果短剧.py",
             "type": 3,
@@ -1791,15 +1799,17 @@
             "api": "https://ghfast.top/https://raw.githubusercontent.com/IY-CPU/IY/main/lib/drpy2.min.js",
             "ext": "https://ghfast.top/https://raw.githubusercontent.com/IY-CPU/IY/main/lib/茫茫.png",
             "category": "网盘/磁力",
-            "searchable": 1
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 1
         },
         {
             "key": "玩偶",
             "name": "🦋 玩偶 • 4K",
             "type": 3,
             "api": "csp_Wogg",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1817,8 +1827,8 @@
             "name": "🦋 快映 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1834,8 +1844,8 @@
             "name": "🦋 木偶 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1854,8 +1864,8 @@
             "name": "🦋 蜡笔 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1874,8 +1884,8 @@
             "name": "🦋 至臻 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1893,8 +1903,8 @@
             "name": "🦋 多多 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1912,8 +1922,8 @@
             "name": "🦋 欧哥 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1932,8 +1942,8 @@
             "name": "🦋 二小 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1951,8 +1961,8 @@
             "name": "🦋 虎斑 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "changeable": 1,
             "ext": {
@@ -1968,7 +1978,7 @@
             "name": "🦋 夸父 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "style": {
@@ -1990,7 +2000,7 @@
             "name": "🦋 盘它 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "style": {
@@ -2005,7 +2015,7 @@
             "name": "🦋 123 • 4K",
             "type": 3,
             "api": "csp_PanWebShare",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "style": {
@@ -2027,50 +2037,54 @@
             "name": "🦋 指南 • 4K",
             "type": 3,
             "api": "csp_4KZhinan",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "人人",
             "name": "🦋 人人 • 4K",
             "type": 3,
             "api": "csp_RenRen",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "即刻",
             "name": "🦋 即刻 • 4K",
             "type": 3,
             "api": "csp_Jike",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "style": {
                 "type": "list"
             },
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "双星",
             "name": "🦋 双星 • 4K",
             "type": 3,
             "api": "csp_ShuangXing",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "style": {
                 "type": "list"
             },
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "荐片",
@@ -2078,61 +2092,68 @@
             "api": "csp_JianPian",
             "type": 3,
             "category": "网盘/磁力",
-            "searchable": 1
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 1
         },
         {
             "key": "七味",
             "name": "🦋 七味 • 磁力",
             "type": 3,
             "api": "csp_QnMp4",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "ext": "https://www.qwshow.com,https://www.qwmkv.com,https://www.qwfilm.com,https://www.qwfun.com,https://www.qnnull.com,https://www.qnnull.com",
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "New6v",
             "name": "🦋 New6V • 磁力",
             "type": 3,
             "api": "csp_New6v",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "ext": "https://www.xb6v.com",
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "美剧迷",
             "name": "🦋 美剧迷 • 磁力",
             "type": 3,
             "api": "csp_MeijuMi",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "迅雷吧",
             "name": "🦋 迅雷吧 • 磁力",
             "type": 3,
             "api": "csp_Xunlei8",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "ext": "https://xunlei8.me",
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "电影港",
             "name": "🦋 电影港 • 磁力",
             "type": 3,
             "api": "csp_XYQHiker",
-            "searchable": 1,
-            "quickSearch": 1,
+            "searchable": 0,
+            "quickSearch": 0,
             "filterable": 1,
             "ext": "https://cnb.cool/fish2018/xs/-/git/raw/main/XYQHiker/电影港.json",
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "阿里云盘",
@@ -2141,12 +2162,13 @@
             "api": "csp_PanAli",
             "searchable": 0,
             "filterable": 0,
-            "changeable": 0,
+            "changeable": 1,
             "style": {
                 "type": "list",
                 "ratio": 1.433
             },
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "quickSearch": 0
         },
         {
             "key": "夸克网盘",
@@ -2155,12 +2177,13 @@
             "api": "csp_PanQuark",
             "searchable": 0,
             "filterable": 0,
-            "changeable": 0,
+            "changeable": 1,
             "style": {
                 "type": "list",
                 "ratio": 1.433
             },
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "quickSearch": 0
         },
         {
             "key": "UC网盘",
@@ -2169,12 +2192,13 @@
             "api": "csp_PanUC",
             "searchable": 0,
             "filterable": 0,
-            "changeable": 0,
+            "changeable": 1,
             "style": {
                 "type": "list",
                 "ratio": 1.433
             },
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "quickSearch": 0
         },
         {
             "key": "百度网盘",
@@ -2183,100 +2207,109 @@
             "api": "csp_PanBaidu",
             "searchable": 0,
             "filterable": 0,
-            "changeable": 0,
+            "changeable": 1,
             "style": {
                 "type": "list",
                 "ratio": 1.433
             },
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "quickSearch": 0
         },
         {
             "key": "盘搜",
             "name": "🦋 盘搜 • 搜索",
             "type": 3,
             "api": "csp_PanSou",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "古哥",
             "name": "🦋 古哥 • 搜索",
             "type": 3,
             "api": "csp_GugeSo",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "百酷",
             "name": "🦋 百酷 • 搜索",
             "type": 3,
             "api": "csp_Baiku",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "米搜",
             "name": "🦋 米搜 • 搜索",
             "type": 3,
             "api": "csp_MiSou",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "鬼鬼",
             "name": "🦋 鬼鬼 • 搜索",
             "type": 3,
             "api": "csp_GuiGui",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "混合",
             "name": "🦋 混合 • 搜索",
             "type": 3,
             "api": "csp_HunHePan",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "天翼",
             "name": "🦋 天翼 • 搜索",
             "type": 3,
             "api": "csp_TianYiSou",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         },
         {
             "key": "趣盘",
             "name": "🦋 趣盘 • 搜索",
             "type": 3,
             "api": "csp_QuPanSo",
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "filterable": 0,
             "timeout": 60,
-            "category": "网盘/磁力"
+            "category": "网盘/磁力",
+            "changeable": 1
         }
     ],
     "lives": [
@@ -2509,18 +2542,6 @@
             "url": "http://iptv.4666888.xyz/FYTV.txt"
         },
         {
-            "name": "易发源 有🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/fafa002/yf2025/refs/heads/main/yiyifafa.txt"
-        },
-        {
-            "name": "俄罗斯源 有🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ilook.epg.one/EDTZN7ANS84N86"
-        },
-        {
             "name": "飞扬源｜Tg：@huliys9",
             "type": 0,
             "ua": "okhttp/5.3.2",
@@ -2563,118 +2584,10 @@
             "url": "https://ha.msbot.dpdns.org/4gtv_api.php"
         },
         {
-            "name": "安博(梯子)卡顿 有🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/安博.txt"
-        },
-        {
             "name": "jackTV(梯子)｜Tg：@huliys9",
             "type": 0,
             "ua": "okhttp/5.3.2",
             "url": "https://php.946985.filegear-sg.me/jackTV.m3u"
-        },
-        {
-            "name": "午夜剧场(梯子)🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/午夜剧场.txt"
-        },
-        {
-            "name": "佬xxx视频资源🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/xxx视频资源.txt"
-        },
-        {
-            "name": "欧美大片直播🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "http://xtvantsc.xyz/欧美2160.m3u"
-        },
-        {
-            "name": "欧美主播直播🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://chaturbate.xvideos4.tk/api5.php?m3u&all"
-        },
-        {
-            "name": "亚洲主播直播🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://chaturbate.xvideos4.tk/api6.php?m3u"
-        },
-        {
-            "name": "EVILANGEL🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/EVILANGEL.m3u"
-        },
-        {
-            "name": "FC2-PPV1🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/FC2-PPV1.m3u"
-        },
-        {
-            "name": "日本女优1🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优1.m3u"
-        },
-        {
-            "name": "日本女优2🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优2.m3u"
-        },
-        {
-            "name": "日本女优3🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优3.m3u"
-        },
-        {
-            "name": "日本女优4🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优4.m3u"
-        },
-        {
-            "name": "日本女优5🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优5.m3u"
-        },
-        {
-            "name": "日本女优6🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优6.m3u"
-        },
-        {
-            "name": "日本女优7🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优7.m3u"
-        },
-        {
-            "name": "日本女优8🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优8.m3u"
-        },
-        {
-            "name": "日本女优9🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优9.m3u"
-        },
-        {
-            "name": "日本女优10🔞｜Tg：@huliys9",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/fgrjk/refs/heads/main/日本女优10.m3u"
         }
     ],
     "parses": [
@@ -2851,7 +2764,7 @@
     ],
     "rules": [
         {
-            "name": "蝴蝶绿色版·高级云端去广告JS注入",
+            "name": "蝴蝶影视·雲端高級去廣告JS注入",
             "hosts": [
                 "vip.wwgz.cn",
                 "lziplayer.com",
@@ -2867,7 +2780,7 @@
                 "www.maolvys.com"
             ],
             "script": [
-                "console.log('蝴蝶绿色 WebView 拦截器启动');",
+                "console.log('蝴蝶影視綠色版高級WebView攔截器啟動');",
                 "window.addEventListener('DOMContentLoaded', function() {",
                 "   document.querySelectorAll('video').forEach(v => { v.muted = true; v.play().catch(e=>{}); });",
                 "   Function.prototype.__constructor__ = Function.prototype.constructor;",
