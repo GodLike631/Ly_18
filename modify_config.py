@@ -18,6 +18,13 @@ tracker_path = 'datas/最新接口文件名.txt'
 old_valid_json_data = {}
 
 # ====================================================================
+# 🚫 【新增：自定义黑名单关键词过滤区】
+# 在下方列表中填入指定关键词（支持多个），脚本合并时会自动删除包含这些关键词的
+# 点播线路与直播源。如果不需要过滤，保持列表为空即可。
+# ====================================================================
+BLOCK_KEYWORDS = ["羊壳", "弹幕", "不可用"]
+
+# ====================================================================
 # ✍️ 【通道一：老杨专属点播手工加线区】
 # ====================================================================
 MY_CUSTOM_SITES = [
@@ -240,13 +247,44 @@ combined_parses = json_haitun.get("parses", []) + json_cnb.get("parses", [])
 custom_keys = {site.get("key") for site in MY_CUSTOM_SITES if site.get("key")}
 upstream_sites = haitun_sites + cnb_sites
 clean_upstream_sites = [site for site in upstream_sites if site.get("key") not in custom_keys]
+
+# ------------------------------------------------------------------
+# 🎯 【过滤点播区核心注入】：从源头过滤包含指定黑名单关键词的点播线路
+# ------------------------------------------------------------------
+if BLOCK_KEYWORDS:
+    filtered_upstream_sites = []
+    for site in clean_upstream_sites:
+        s_name = site.get("name", "")
+        if any(kw.lower() in s_name.lower() for kw in BLOCK_KEYWORDS if kw):
+            continue
+        filtered_upstream_sites.append(site)
+    clean_upstream_sites = filtered_upstream_sites
+
 json_cnb["sites"] = clean_upstream_sites + MY_CUSTOM_SITES
 
 custom_live_names = {live.get("name") for live in MY_CUSTOM_LIVES if live.get("name")}
 base_lives = haitun_lives + cnb_lives
 clean_base_lives = [live for live in base_lives if live.get("name") not in custom_live_names]
 
+# ------------------------------------------------------------------
+# 🎯 【过滤直播区核心注入】：同步过滤包含指定黑名单关键词的直播源
+# ------------------------------------------------------------------
+if BLOCK_KEYWORDS:
+    filtered_base_lives = []
+    for live in clean_base_lives:
+        l_name = live.get("name", "")
+        if any(kw.lower() in l_name.lower() for kw in BLOCK_KEYWORDS if kw):
+            continue
+        filtered_base_lives.append(live)
+    clean_base_lives = filtered_base_lives
+
 for i, custom_live in enumerate(MY_CUSTOM_LIVES):
+    live_name = custom_live.get("name", "")
+    
+    # 手工定制区同样执行黑名单拦截
+    if BLOCK_KEYWORDS and any(kw.lower() in live_name.lower() for kw in BLOCK_KEYWORDS if kw):
+        continue
+
     if len(clean_base_lives) >= (5 + i):
         clean_base_lives.insert(5 + i, custom_live)
     else:
@@ -339,7 +377,7 @@ try:
             "hosts": ad_hosts,
             "script": custom_js_rules
         }
-        ordered_obj["rules"] = [js_injection_rule] + [r for r in current_rules if r.get("name") != "老楊TV·雲端高級去廣告JS注入"]
+        ordered_obj["rules"] = [js_injection_rule] + [r for r in current_rules if r.get("name") != "老楊TV·雲端高級去广告JS注入"]
 
         block_1_rebo = []        
         block_2_yingshi = []     
